@@ -1,6 +1,7 @@
 package ggoggoDB;
 
 import java.sql.*;
+import java.util.Scanner;
 
 public class ggoggoDB {
 	public static final String URL = "jdbc:oracle:thin:@localhost:1521:xe";
@@ -11,7 +12,9 @@ public class ggoggoDB {
 		Connection conn = null; // Connection object
 		//Statement stmt = null;	// Statement object
 		String sql = ""; // an SQL statement 
-		String ID = "ginger00";
+		String ID = "";
+		String inputed_pw = "";
+		String password = "";
 		
 		try {
 			// Load a JDBC driver for Oracle DBMS
@@ -35,19 +38,31 @@ public class ggoggoDB {
 			System.exit(1);
 		}
 		
+		Scanner scan = new Scanner(System.in);
+		
+		System.out.print("ID       : ");
+		ID = scan.nextLine();
+		System.out.print("password : ");
+		inputed_pw = scan.nextLine();	
+		
 		try {
-			
-			sql = "SELECT PASSWORD from PJUSER";
+			sql = "SELECT PASSWORD from PJUSER where pjuserid=?"; //작은 따옴표여야 함
 			PreparedStatement ps = conn.prepareStatement(sql);
-			//ps.setString(1, ID);
+			ps.setString(1, ID);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
-				String password = rs.getString(1);
-				System.out.println("ID = " + ID 
-								+  ", Password = " + password);
+				password = rs.getString("password");
+				System.out.println("correct Password : " + password);
 			}
-			ps.close();
-			rs.close();			
+			// 무조건 커밋 돌려놓자...
+			if (inputed_pw.equals(password)) {
+				System.out.println("login success!");
+			}
+			else {
+				System.out.println("login fail..");
+			}
+			rs.close();
+			ps.close();			
 		}catch(SQLException ex2) {
 			System.err.println("sql error = " + ex2.getMessage());
 			System.exit(1);
