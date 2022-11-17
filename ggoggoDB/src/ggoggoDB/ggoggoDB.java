@@ -10,7 +10,7 @@ public class ggoggoDB {
 	
 	public static void main(String[] args) {
 		Connection conn = null; // Connection object
-		//Statement stmt = null;	// Statement object
+		Scanner scan = new Scanner(System.in);
 		
 		try {
 			// Load a JDBC driver for Oracle DBMS
@@ -34,9 +34,20 @@ public class ggoggoDB {
 			System.exit(1);
 		}
 		
-		part1_bySuin.login(conn);
+		
+//		UserInformation login = part1_bySuin.login(conn, scan);
+		UserInformation login = new UserInformation("momomo", "abcdef", true); // test를 위한 hard coding
+		System.out.println(login.isVaild());
+		System.out.println(login.getID());
+		
+		if (login.isVaild()) {
+			System.out.println("로그인 완료");
+			System.out.println("장르설정");
+			part1_bySuin.edit_interested_genre(conn, login, scan);
+		}
 		
 		
+		System.out.println("프로그램 종");
 	}
 }
 
