@@ -35,18 +35,24 @@ public class ggoggoDB {
 		}
 		
 		
-		UserInformation login = part1_bySuin.login(conn, scan);
-//		UserInformation login = new UserInformation("momomo", "abcdef", true); // test를 위한 hard coding
+		/* 1. 로그인*/
+// 		UserInformation login = part1_bySuin.login(conn, scan);
+		
+		// test를 위한 hard coding
+		UserInformation login = new UserInformation("momomo", "abcdef", true); 
 		System.out.println(login.isVaild());
 		System.out.println(login.getID());
 		
-		if (login.isVaild()) {
-			System.out.println("로그인 완료");
-			System.out.println("장르설정");
-			part2_bySuin.edit_interested_genre(conn, login, scan);
-		}
-		
-		
+		/* 2. 장르 설정*/
+//		if (login.isVaild()) {
+//			System.out.println("로그인 완료");
+//			System.out.println("장르설정");
+//			part2_bySuin.edit_interested_genre(conn, login, scan);
+//		}
+		/* 3. 검색 (1) 필터 설정 */
+		FilterInfo temp = part3_1_bySuin.settingFilter(conn, scan);
+		temp.show_all();
+
 		System.out.println("프로그램 종료");
 	}
 }
