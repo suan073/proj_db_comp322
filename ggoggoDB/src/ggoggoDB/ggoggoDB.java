@@ -40,8 +40,8 @@ public class ggoggoDB {
 		
 		// test를 위한 hard coding
 		UserInformation login = new UserInformation("momomo", "abcdef", true); 
-		System.out.println(login.isVaild());
-		System.out.println(login.getID());
+//		System.out.println(login.isVaild());
+//		System.out.println(login.getID());
 		
 		/* 2. 장르 설정*/
 //		if (login.isVaild()) {
@@ -52,6 +52,8 @@ public class ggoggoDB {
 		/* 3. 검색 (1) 필터 설정 */
 		FilterInfo temp = part3_1_bySuin.settingFilter(conn, scan);
 		temp.show_all();
+		System.out.println();
+		part3_1_bySuin.search(conn, scan, temp);
 
 		System.out.println("프로그램 종료");
 	}
