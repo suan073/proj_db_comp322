@@ -1,7 +1,10 @@
 package ggoggoDB;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Scanner;
+
+import oracle.security.o3logon.a;
 
 class sub_func_1{
     // 3-1-1 sub_functions : fil
@@ -127,64 +130,58 @@ class sub_func_2{
         }
         return filt_string;
     }
-
-
-
-    public static void search_the_word(Connection conn, Scanner scan, FilterInfo filter, String category,String search_word){
+    
+    public static ArrayList<String> search_the_word(Connection conn, Scanner scan, FilterInfo filter, String category,String search_word){
         StringBuffer sql = new StringBuffer();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
+        ArrayList<String> result = new ArrayList<>();
 
+        sql.append("select W.ssn, Worktitle, sumoflikes from ( select * from ( ");
+        sql.append(filter.make_where_sql());
         switch(category){
             case "TITLE":
-                sql.append("select * from (");
-                sql.append(filter.make_where_sql());
-                sql.append(")\n where WORKTITLE like '%");
-                sql.append(search_word);
-                sql.append("%'");
+                sql.append(") where WORKTITLE like '%");
                 break;
             case "CREATOR":
-                sql.append("select * from (");
-                sql.append(filter.make_where_sql());
-                sql.append(") W, creator C, made M\n"
-                            + "where W.ssn = M.wssn\n"
-                            + "and M.wssn = C.creatorid\n"
-                            + "and crname like '%");
-            	sql.append(search_word);
-                sql.append("%'");
+                sql.append(") W, creator C, made M where W.ssn = M.wssn and M.wssn = C.creatorid and crname like '%");
                 break;
             case "KEYWORD":
-                sql.append("select * from (");
-                sql.append(filter.make_where_sql());
-                sql.append(") W, keyword K\n"
-                            + "where W.ssn =  K.wssn\n"
-                            + "and keyword like '%");
-            	sql.append(search_word);
-                sql.append("%'");
+                sql.append(") W, keyword K where W.ssn =  K.wssn and keyword like '%");
                 break;
         }
-        
-        
+        sql.append(search_word);
+        sql.append("%' ");
+        sql.append(") W, (select Writeabout, sum(likes) as sumoflikes from pjlog ");
+        sql.append("group by Writeabout) O where W.ssn = O.Writeabout order by sumoflikes desc ");
 
         try {
 			pstmt = conn.prepareStatement(sql.toString());
             rs = pstmt.executeQuery();
+
+            int cnt = 0;
             while(rs.next()){
                 String workTitle = rs.getString("WORKTITLE");
-                System.out.println(workTitle);
+                System.out.println(cnt+". "+workTitle);
+                result.add(rs.getString("SSN"));
+                cnt++;
             }
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
+        return result;
     }
+
+    public static void show_work_detail(Connection conn, ResultSet res, )
 
 }
 public class part3_1_bySuin {
     /*
         1. 필터 설정(language, isAdult, Media, Status)
         2. 입력어 검색(title,creator,keyword)
-        3. 보여주는 순서는 work를 각 log의 like 합이 높은 순서대로 보여줌
+            이때, 보여주는 순서는 work를 각 log의 like 합이 높은 순서대로 보여줌
+            검색 결과 중에서 워크를 선택하면 해당 워크의 상세 정보를 보여줌
     */
 
     // 1. 필터 설정(1 : language, 2 : isAdult, 3: Media, 4 : Status)
@@ -222,9 +219,11 @@ public class part3_1_bySuin {
     }
 
     // 2. 입력어 검색(title, creator, keyword) (3. 보여주는 순서는 work를 각 log의 like 합이 높은 순서대로 보여줌)
-    public static void search(Connection conn, Scanner scan, FilterInfo filter){
+    public static ArrayList<String> search(Connection conn, Scanner scan, FilterInfo filter){
+        ArrayList<String> result = null;
         String category_spel;
         String category_full;
+        System.out.println(".\n.\n.\n");
         System.out.println("********* 3-1-2. 필터가 적용된 입력어 검색 시작 *********");
         
         while(true){
@@ -250,12 +249,23 @@ public class part3_1_bySuin {
                 break;
             }
             System.out.println("검색어를 포함하는 "+category_full+"의 작품은 다음과 같습니다");
-            // select 문을 실행하는 함수 (3. 보여주는 순서는 work를 각 log의 like 합이 높은 순서대로 보여줌)
 
-            sub_func_2.search_the_word( conn, scan, filter, category_full, input );
-            
+            result = sub_func_2.search_the_word( conn, scan, filter, category_full, input);
+
+            System.out.println();
+            System.out.println("해당 검색 결과 중 자세히 살펴보고 싶으시면 (Y)를 누르세요.");
+            String YesOrNo = scan.nextLine();
+            if(YesOrNo.equals("Y")){
+                return result;
+            }
+
+            System.out.println();
+            System.out.println("현재 검색 결과 기록을 지우고 새로운 검색을 시작합니다.");
+            System.out.println();
+            System.out.println(".\n.\n.\n");
         }
-
+        return null;
     } 
-    
+
+
 }
