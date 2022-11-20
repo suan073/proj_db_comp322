@@ -2,8 +2,72 @@ package ggoggoDB;
 
 import java.sql.*; // import JDBC package
 import java.util.Date;
+import java.util.Scanner;
 
 class OpenBoard {
+	
+	void executeOpenBoard(Connection conn, String myUserId) {
+		Scanner scanner = new Scanner(System.in);
+		while (true) {
+			String choice;
+
+			System.out.println();
+			System.out.println("*** 게시판 ***");
+			System.out.println("1. 전체 게시판 보기");
+			System.out.println("2. 게시글 검색하기");
+			System.out.println("0. 돌아가기");
+
+			choice = scanner.nextLine();
+
+			if (choice.equals("1")) {
+				while (true) {
+					int logs[] = showBoard(conn);
+
+					System.out.println("자세히 보고 싶은 글의 글번호를 입력하세요");
+					System.out.print("뒤로 가려면 'n'을 입력하세요: ");
+					String input = scanner.nextLine();
+					int targetLog = Integer.parseInt(input);
+
+					if (input.equals("n"))
+						break;
+					if(!inlogs(targetLog, logs))
+						System.out.println("잘못된 입력입니다.");
+					else {
+						while (true) {
+							int cNum = showLogComments(conn, targetLog);
+							System.out.print("댓글을 작성하시겠습니까? (y/n): ");
+							choice = scanner.nextLine();
+
+							if (choice.equals("y")) {
+								System.out.print("작성할 댓글을 입력하세요: ");
+								String comment = scanner.nextLine();
+								writeComment(conn, cNum, comment, myUserId, targetLog);
+							} else if (choice.equals("n")) {
+								System.out.println("이전으로 돌아갑니다.");
+								break;
+							} else {
+								System.out.println("잘못된 입력입니다.");
+							}
+						}
+					}
+				}
+
+			} else if (choice.equals("2")) {
+
+				System.out.print("게시글 검색: ");
+				String search = scanner.nextLine();
+
+				searchLog(conn, search);
+
+			} else if (choice.equals("0")) {
+				break;
+			} else {
+				System.out.println("잘못된 입력입니다.\n");
+				continue;
+			}
+		}
+		scanner.close();
+	}
 
 	int[] showBoard(Connection conn) {
 		int[] logs = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
@@ -14,7 +78,7 @@ class OpenBoard {
 					+ "order by pjlogdate desc";
 			ResultSet rs = stmt.executeQuery(sql);
 			System.out.println();
-			System.out.println("* ��ü �Խ��� *");
+			System.out.println("* 전체 게시판 *");
 			System.out.println("--------------------");
 			while (rs.next() && logNum < 10) {
 				int logid = rs.getInt(1);
@@ -23,13 +87,14 @@ class OpenBoard {
 				Date date = rs.getDate(3);
 				String title = rs.getString(4);
 				String contents = rs.getString(5);
-				System.out.println("�۹�ȣ #" + logid + "  ����: " + title);
-				System.out.println("�ۼ���:" + writerID + "\t    " + date);
+				System.out.println("글번호 #" + logid + "  제목: " + title);
+				System.out.println("작성자:" + writerID + "\t    " + date);
 				System.out.println(contents);
 				System.out.println();
 				logNum++;
 			}
 			stmt.close();
+			rs.close();
 		} catch (SQLException ex2) {
 			System.err.println("sql error = " + ex2.getMessage());
 			System.exit(1);
@@ -37,10 +102,11 @@ class OpenBoard {
 		return logs;
 	}
 
-	void searchLog(Connection conn, String search) {
+	int[] searchLog(Connection conn, String search) {
+		int[] logs = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 		try {
 			int logNum = 0;
-			String sql = "select writerid, pjlogdate, pjlogtitle, pjcontents\r\n" + "from pjlog\r\n"
+			String sql = "select pjlogid, writerid, pjlogdate, pjlogtitle, pjcontents\r\n" + "from pjlog\r\n"
 					+ "where pjlogtitle like ? or pjcontents like ? or writerid like ?\r\n" + "order by pjlogdate desc";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, "%" + search + "%");
@@ -48,52 +114,82 @@ class OpenBoard {
 			ps.setString(3, "%" + search + "%");
 			ResultSet rs = ps.executeQuery();
 			System.out.println();
-			System.out.println("'" + search + "' �˻� ���");
+			System.out.println("'" + search + "' 검색 결과");
 			System.out.println("--------------------");
 
 			while (rs.next() && logNum < 10) {
-				String writerID = rs.getString(1);
-				Date date = rs.getDate(2);
-				String title = rs.getString(3);
-				String contents = rs.getString(4);
-				System.out.println(writerID + "\t" + date);
-				System.out.println("[" + title + "]");
+				int logid = rs.getInt(1);
+				logs[logNum] = logid;
+				String writerID = rs.getString(2);
+				Date date = rs.getDate(3);
+				String title = rs.getString(4);
+				String contents = rs.getString(5);
+				System.out.println("글번호 #" + logid + "  제목: " + title);
+				System.out.println("작성자:" + writerID + "\t    " + date);
 				System.out.println(contents);
 				System.out.println();
 				logNum++;
 			}
 			if (logNum == 0)
-				System.out.println("�˻� ����� �����ϴ� ...\n");
+				System.out.println("검색 결과가 없습니다 ...\n");
+			ps.close();
+			rs.close();
 		} catch (SQLException ex2) {
 			System.err.println("sql error = " + ex2.getMessage());
 			System.exit(1);
 		}
+		return logs;
+	}
+	
+	boolean inlogs(int targetLog, int[] logs) {
+		for (int log : logs) {
+			if (targetLog == log)
+				return true;
+		}
+		return false;
 	}
 
 	int showLogComments(Connection conn, int logid) {
 		int commentNum = 0;
 		try {
-			//
-			System.out.println("--------------------");
-			System.out.println();
-
-			String sql = "select writerid, commdate, pjtext\r\n" + "from pjcomment\r\n" + "where targetposting=?\r\n"
-					+ "order by commdate asc";
+			String sql = "select writerid, pjlogdate, pjlogtitle, pjcontents\r\n" + "from pjlog\r\n"
+					+ "where pjlogid=?";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, logid);
 			ResultSet rs = ps.executeQuery();
+
+			if (rs.next()) {
+				String writerID = rs.getString(2);
+				Date date = rs.getDate(3);
+				String title = rs.getString(4);
+				String contents = rs.getString(5);
+				System.out.println("글번호 #" + logid + "  제목: " + title);
+				System.out.println("작성자:" + writerID + "\t    " + date);
+				System.out.println(contents);
+				System.out.println();
+			}
+			System.out.println("--------------------");
+			System.out.println();
+
+			sql = "select writerid, commdate, pjtext\r\n" + "from pjcomment\r\n" + "where targetposting=?\r\n"
+					+ "order by commdate asc";
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, logid);
+			rs = ps.executeQuery();
 
 			while (rs.next()) {
 				commentNum++;
 				String writerID = rs.getString(1);
 				Date date = rs.getDate(2);
 				String text = rs.getString(3);
-				System.out.println("�ۼ���: " + writerID + "\t" + date);
+				System.out.println("작성자: " + writerID + "\t" + date);
 				System.out.println(text);
 				System.out.println();
 			}
 			if(commentNum == 0)
-				System.out.println("����� �����ϴ�, ����� �ۼ��غ�����!");
+				System.out.println("댓글이 없습니다, 댓글을 작성해보세요!");
+			ps.close();
+			rs.close();
 
 		} catch (SQLException ex2) {
 			System.err.println("sql error = " + ex2.getMessage());
@@ -115,19 +211,17 @@ class OpenBoard {
 
 			int res = ps.executeUpdate();
 			if (res == 1) {
-				System.out.println("����� �ۼ��Ǿ����ϴ�.");
+				System.out.println("댓글이 작성되었습니다.");
 				conn.commit();
 
 			} else {
-				System.out.println("����!");
-//				return false;
+				System.out.println("오류!");
 			}
-
+			ps.close();
 		} catch (SQLException ex2) {
 			System.err.println("sql error = " + ex2.getMessage());
 			System.exit(1);
 		}
-//		return true;
 	}
 
 }
