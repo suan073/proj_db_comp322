@@ -7,11 +7,11 @@ public class ggoggoDB {
 	public static final String URL = "jdbc:oracle:thin:@localhost:1521:xe";
 	public static final String USER_UNIVERSITY ="ggoggoDB";
 	public static final String USER_PASSWD ="comp322";
-
+	
 	// public static final String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
 	// public static final String USER_DBPROJ = "dbproject";
 	// public static final String USER_PASSWD = "db";
-	
+
 	public static void main(String[] args) {
 		Connection conn = null; // Connection object
 		Scanner scan = new Scanner(System.in);
@@ -38,7 +38,7 @@ public class ggoggoDB {
 			System.exit(1);
 		}
 		
-		
+	
 		/* 1. 로그인*/
  		UserInformation login = part1_bySuin.login(conn, scan);
 		
@@ -56,10 +56,10 @@ public class ggoggoDB {
 		/* 3. 검색 (1) 필터 설정 */
 		FilterInfo temp = part3_1_bySuin.settingFilter(conn, scan);
 		temp.show_all();
-<<<<<<< HEAD
+
+		
 		System.out.println();
 		part3_1_bySuin.search(conn, scan, temp);
-=======
 
 		/* main work */
 		Scanner scanner = new Scanner(System.in);
@@ -189,7 +189,6 @@ public class ggoggoDB {
 			}
 		}
 
->>>>>>> main
 		System.out.println("프로그램 종료");
 
 		scanner.close();

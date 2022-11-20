@@ -173,7 +173,62 @@ class sub_func_2{
         return result;
     }
 
-    public static void show_work_detail(Connection conn, ResultSet res, )
+    static void show_one_work_detail(Connection conn, String ssn){
+        StringBuffer sql = new StringBuffer();
+        sql.append("select * from work where ssn = ?");
+        try {
+			PreparedStatement pstmt = conn.prepareStatement(ssn);
+            pstmt.setString(1, ssn);
+            ResultSet rs = pstmt.executeQuery();
+            if(rs.next()){
+                StringBuffer result = new StringBuffer();
+                String work_title = rs.getString("WORKTITLE");
+                String media = rs.getString("MEDIA");
+                String is_adult = rs.getString("ISADULT");
+                String introduciton = rs.getString("INTRODUCTION");
+                String language = rs.getString("LANGUAGE");
+                int num_of_episode = rs.getInt("NUMOFEPISODE");
+                String status = rs.getString("STATUS");
+                String origin_ssn = rs.getString("ORIGINSSN");
+                String connected_type = rs.getString("CONNECTTYPE");
+
+                result.append("----------------------------------\n");
+                result.append("작품 제목 : "+work_title);
+                result.append("매체 : "+media);
+                result.append("미성년자 감상 제한 여부 : "+is_adult);
+                result.append("작품 소개 \n"+introduciton);
+                result.append("언어 : "+language);
+                if(num_of_episode != 1){
+                    result.append("에피소드 수 : " + num_of_episode);
+                }
+                result.append("현재 상태 : "+status);
+                if(origin_ssn != null){
+
+                    /* 
+                     * 현재 여기서 멈춤 
+                     * origin ssn을 갖고 원래 작품 이름을 데리고 와야합니다.
+                     * 내가 생각하는 형태는 "해당 작품은 ~~의 XX화 입니다."
+                     * 이렇게 출력하는 거임. 
+                     */
+                    //result.append("() 해당 작품은 " + );
+                    
+                }
+
+            }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+        
+    }
+
+    public static void select_one_work_show_detail(Connection conn, Scanner scan, ArrayList<String> work_list){
+        System.out.println(".\n.\n.\n");
+        System.out.println("살펴 싶은 작품의 번호를 입력하세요.");
+        int input = scan.nextInt();
+        scan.nextLine();
+        System.out.println(input+"번의 작품에 관한 상세 정보는 다음과 같습니다");
+        show_one_work_detail(conn, work_list.get(input)); 
+    }
 
 }
 public class part3_1_bySuin {
@@ -219,7 +274,7 @@ public class part3_1_bySuin {
     }
 
     // 2. 입력어 검색(title, creator, keyword) (3. 보여주는 순서는 work를 각 log의 like 합이 높은 순서대로 보여줌)
-    public static ArrayList<String> search(Connection conn, Scanner scan, FilterInfo filter){
+    public static void search(Connection conn, Scanner scan, FilterInfo filter){
         ArrayList<String> result = null;
         String category_spel;
         String category_full;
@@ -256,7 +311,8 @@ public class part3_1_bySuin {
             System.out.println("해당 검색 결과 중 자세히 살펴보고 싶으시면 (Y)를 누르세요.");
             String YesOrNo = scan.nextLine();
             if(YesOrNo.equals("Y")){
-                return result;
+                // 선택 결과 보여주기 시작
+                sub_func_2.select_one_work_show_detail(conn, scan, result);
             }
 
             System.out.println();
@@ -264,7 +320,6 @@ public class part3_1_bySuin {
             System.out.println();
             System.out.println(".\n.\n.\n");
         }
-        return null;
     } 
 
 
