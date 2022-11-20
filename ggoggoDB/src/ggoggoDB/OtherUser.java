@@ -4,12 +4,31 @@ import java.sql.*; // import JDBC package
 
 class OtherUser {
 	String oUserId;
-	
-	OtherUser(String userid){
+
+	OtherUser(String userid) {
 		this.oUserId = userid;
 	}
+	
+	boolean isValid(Connection conn) {
+		try {
+			String sql = "select * from pjuser where pjuserid=?";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, oUserId);
+			ResultSet rs = ps.executeQuery();
+			
+			if (rs.next())
+				return true;
+			
+			ps.close();
+			rs.close();
+		} catch (SQLException ex2) {
+			System.err.println("sql error = " + ex2.getMessage());
+			System.exit(1);
+		}
+		return false;
+	}
 
-	public boolean ShowUserLog(Connection conn) {
+	boolean showUserLog(Connection conn) {
 		try {
 			int logNum = 0;
 
@@ -18,6 +37,7 @@ class OtherUser {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, oUserId);
 			ResultSet rs = ps.executeQuery();
+			
 			System.out.println();
 			while (rs.next() && logNum < 10) {
 				String writerID = rs.getString(1);
@@ -32,6 +52,9 @@ class OtherUser {
 			}
 			if (logNum == 0)
 				System.out.println("No Log ...\n");
+			
+			ps.close();
+			rs.close();
 
 		} catch (SQLException ex2) {
 			System.err.println("sql error = " + ex2.getMessage());
@@ -40,47 +63,50 @@ class OtherUser {
 		return true;
 	}
 
-	public boolean unfollow(Connection conn, String myId) {
+	boolean unfollow(Connection conn, String myId) {
 		try {
 			String sql = "delete from follow where pjuserid=? and followerid=?";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, oUserId);
 			ps.setString(2, myId);
-			
+
 			int res = ps.executeUpdate();
 			if (res == 1) {
-				System.out.println(oUserId + "¸¦ ¾ðÆÈ·Î¿ìÇß½À´Ï´Ù.");
+				System.out.println(oUserId + "ë¥¼ ì–¸íŒ”ë¡œìš°í–ˆìŠµë‹ˆë‹¤.");
 				conn.commit();
-				
+
 			} else {
-				System.out.println("¿À·ù!");
+				System.out.println("ì˜¤ë¥˜!");
 				return false;
 			}
 			
+			ps.close();
+
 		} catch (SQLException ex2) {
 			System.err.println("sql error = " + ex2.getMessage());
 			System.exit(1);
 		}
 		return true;
 	}
-	
-	public boolean follow(Connection conn, String myId) {
+
+	boolean follow(Connection conn, String myId) {
 		try {
 			String sql = "insert into follow values (?, ?)";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, myId);
 			ps.setString(2, oUserId);
-			
+
 			int res = ps.executeUpdate();
 			if (res == 1) {
-				System.out.println(oUserId + "¸¦ ÆÈ·Î¿ìÇß½À´Ï´Ù.");
+				System.out.println(oUserId + "ë¥¼ íŒ”ë¡œìš°í–ˆìŠµë‹ˆë‹¤.");
 				conn.commit();
-				
+
 			} else {
-				System.out.println("¿À·ù!");
+				System.out.println("ì˜¤ë¥˜!");
 				return false;
 			}
-			
+			ps.close();
+
 		} catch (SQLException ex2) {
 			System.err.println("sql error = " + ex2.getMessage());
 			System.exit(1);
