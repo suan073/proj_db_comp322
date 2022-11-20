@@ -1,7 +1,6 @@
 package ggoggoDB;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 
 public class FilterInfo {
@@ -17,6 +16,22 @@ public class FilterInfo {
         this.status = new ArrayList<>();
     }
     
+    public int count_item_num(){
+        int result = 0;
+        
+        ArrayList<ArrayList<String>> types = new ArrayList<ArrayList<String>>(); 
+        types.add(this.language);
+        types.add(this.isAdult);
+        types.add(this.media);
+        types.add(this.status);
+
+        for (int j = 0; j < types.size(); j++ ){
+            result += types.get(j).size();
+        }
+
+        return result;
+    }
+
     public ArrayList<String> get_info(String select){
         ArrayList<String> result = null;
         switch(select){
@@ -96,6 +111,48 @@ public class FilterInfo {
             System.out.println();
         }
 
+    }
+
+    public String make_where_sql(){
+        StringBuffer sql = new StringBuffer();
+        sql.append("select * from work");
+
+        if(count_item_num() == 0){
+            return sql.toString();
+        }
+
+        String[] type_names = {"language","isAdult","media","status"};
+        ArrayList<ArrayList<String>> types = new ArrayList<ArrayList<String>>(); 
+        types.add(this.language);
+        types.add(this.isAdult);
+        types.add(this.media);
+        types.add(this.status);
+        
+        sql.append(" where ");
+        
+        int cnt = 0;
+        for (int j = 0; j < types.size(); j++ ){
+            ArrayList<String> type = types.get(j);
+            if(type.size() == 0){
+                continue;
+            }
+            if(j != 0) {
+            	sql.append(" and ");
+            }
+            sql.append(" (");
+            for(int i = 0; i < type.size(); i++){
+                String item = type.get(i);
+                if(cnt != 0){
+                    sql.append(" or ");
+                }
+                cnt++;
+                sql.append(type_names[j] + "= '" +item + "' ");
+            }
+            sql.append(") ");
+            cnt = 0;
+        }
+        System.out.println(sql.toString());
+        return sql.toString();
     }
 
     public void show (String selected){
