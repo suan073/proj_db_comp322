@@ -5,7 +5,25 @@ import java.util.Date;
 import java.util.Scanner;
 
 class OpenBoard {
+	int logNum;
 	
+	OpenBoard(Connection conn) {
+		logNum = 0;
+		try {
+			Statement stmt = conn.createStatement();
+			String sql = "select * from pjlog";
+			ResultSet rs = stmt.executeQuery(sql);
+			
+			while (rs.next())
+				logNum++;
+			stmt.close();
+			rs.close();
+		} catch (SQLException ex2) {
+			System.err.println("sql error = " + ex2.getMessage());
+			System.exit(1);
+		}
+	}
+
 	void executeOpenBoard(Connection conn, Scanner scanner, String myUserId) {
 		while (true) {
 			String choice;
@@ -30,7 +48,7 @@ class OpenBoard {
 					if (input.equals("n"))
 						break;
 					int targetLog = Integer.parseInt(input);
-					if(!inlogs(targetLog, logs))
+					if (!inlogs(targetLog, logs))
 						System.out.println("잘못된 입력입니다.");
 					else {
 						while (true) {
@@ -60,7 +78,7 @@ class OpenBoard {
 				searchLog(conn, search);
 
 			} else if (choice.equals("3")) {
-				// writeLog();
+				writeLog(conn, scanner, myUserId);
 			} else if (choice.equals("0")) {
 				break;
 			} else {
@@ -141,7 +159,7 @@ class OpenBoard {
 		}
 		return logs;
 	}
-	
+
 	boolean inlogs(int targetLog, int[] logs) {
 		for (int log : logs) {
 			if (targetLog == log)
@@ -158,7 +176,7 @@ class OpenBoard {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, logid);
 			ResultSet rs = ps.executeQuery();
-			
+
 			System.out.println();
 			if (rs.next()) {
 				String writerID = rs.getString(1);
@@ -188,7 +206,7 @@ class OpenBoard {
 				System.out.println(text);
 				System.out.println();
 			}
-			if(commentNum == 0)
+			if (commentNum == 0)
 				System.out.println("댓글이 없습니다, 댓글을 작성해보세요!");
 			ps.close();
 			rs.close();
@@ -205,7 +223,7 @@ class OpenBoard {
 			java.sql.Date today = new java.sql.Date(System.currentTimeMillis());
 			String sql = "insert into pjcomment values (?, ?, ?, ?, ?)";
 			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(1, cnum+1);
+			ps.setInt(1, cnum + 1);
 			ps.setString(2, text);
 			ps.setDate(3, today);
 			ps.setString(4, userid);
@@ -225,9 +243,53 @@ class OpenBoard {
 			System.exit(1);
 		}
 	}
-	
-	void writeLog() {
-		
+
+	void writeLog(Connection conn, Scanner scanner, String userid) {
+		try {
+			java.sql.Date today = new java.sql.Date(System.currentTimeMillis());
+			String sql = "insert into pjlog values (?, ?, ?, ?, ?, ?, ?, ?)";
+			PreparedStatement ps = conn.prepareStatement(sql);
+
+			String input;
+
+			System.out.print("제목을 입력하세요: ");
+			input = scanner.nextLine();
+			ps.setString(2, input);
+			
+			while (true) {
+				System.out.print("공개여부를 설정하세요(y/n): ");
+				input = scanner.nextLine();
+				if (input.equals("n") || input.equals("y")) {
+					ps.setString(3, input);
+					break;
+				} else {
+					System.out.println("잘못된 입력입니다.");
+				}
+			}
+
+			System.out.print("글 내용을 입력하세요: ");
+			input = scanner.nextLine();
+			ps.setString(5, input);
+
+			ps.setInt(1, logNum++);
+			ps.setInt(4, 0);
+			ps.setDate(6, today);
+			ps.setString(7, userid);
+			ps.setString(8, null);
+
+			int res = ps.executeUpdate();
+			if (res == 1) {
+				System.out.println("글이 작성되었습니다.");
+				conn.commit();
+
+			} else {
+				System.out.println("오류!");
+			}
+			ps.close();
+		} catch (SQLException ex2) {
+			System.err.println("sql error = " + ex2.getMessage());
+			System.exit(1);
+		}
 	}
 
 }

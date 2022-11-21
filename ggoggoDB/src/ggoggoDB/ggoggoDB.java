@@ -59,7 +59,7 @@ public class ggoggoDB {
 
 		/* main work */
 		String myUserId = "XoOoOong"; // arbitrary id
-		OpenBoard openboard = new OpenBoard();
+		OpenBoard openboard = new OpenBoard(conn);
 		MyPage mypage = new MyPage(conn, myUserId);
 
 		/* Main3. OpenBoard */
