@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class part2_bySuin {
 
-    private static void show_interested_genre (Connection conn, UserInformation info, boolean reverse) {
+    private static void show_interested_genre (Connection conn, UserInfo info, boolean reverse) {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		int cnt = 0;
@@ -131,7 +131,7 @@ public class part2_bySuin {
 		}
 	}
 	
-	public static void edit_interested_genre (Connection conn, UserInformation info, Scanner scan ) {
+	public static void edit_interested_genre (Connection conn, UserInfo info, Scanner scan ) {
 		String genre = "start";
 		int gID = -1;
 		

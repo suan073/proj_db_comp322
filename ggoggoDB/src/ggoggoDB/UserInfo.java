@@ -1,11 +1,11 @@
 package ggoggoDB;
 
-public class UserInformation {
+public class UserInfo {
 	private final String ID;
 	private final String password;
 	private final Boolean infoValid;
 	
-	public UserInformation(String id, String pw, Boolean v) {
+	public UserInfo(String id, String pw, Boolean v) {
 		this.ID = id;
 		this.password = pw;
 		this.infoValid = v;

@@ -31,10 +31,10 @@ public class part1_bySuin {
 		return result;
 	}
 
-	public static UserInformation login(Connection conn, Scanner scan) { 
+	public static UserInfo login(Connection conn, Scanner scan) { 
 		String ID = "";
 		String inputed_pw = "";
-		UserInformation result = null;
+		UserInfo result = null;
 		
 		System.out.println("********* 로그인 정보를 입력하시오. *********");
 		System.out.print("ID       : ");
@@ -44,7 +44,7 @@ public class part1_bySuin {
 		
 		System.out.println("********* 로그인 정보를 확인하겠습니다. *********");
 		
-		result = new UserInformation(ID, inputed_pw, check_password_correct(conn, ID, inputed_pw));
+		result = new UserInfo(ID, inputed_pw, check_password_correct(conn, ID, inputed_pw));
 	
 		
 		return result;

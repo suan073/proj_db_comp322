@@ -40,12 +40,12 @@ public class ggoggoDB {
 		
 	
 		/* 1. 로그인*/
- 		UserInformation login = part1_bySuin.login(conn, scan);
+// 		UserInfo login = part1_bySuin.login(conn, scan);
 		
 		// test를 위한 hard coding
-//		UserInformation login = new UserInformation("momomo", "abcdef", true); 
-		System.out.println(login.isVaild());
-		System.out.println(login.getID());
+		UserInfo login = new UserInfo("momomo", "abcdef", true); 
+//		System.out.println(login.isVaild());
+//		System.out.println(login.getID());
 		
 		/* 2. 장르 설정*/
 		if (login.isVaild()) {
