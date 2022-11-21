@@ -295,9 +295,11 @@ class OpenBoard {
 					ps.setString(8, null);
 					break;
 				} else if (input.equals("y")) {
-					Searching s = new Searching();
+					part3_1_bySuin s = new part3_1_bySuin();
 					String wssn = s.search2(conn, scanner);
 					ps.setString(8, wssn);
+//					String wssn = getSSN(conn, scanner);
+//					ps.setString(8, wssn);
 					break;
 				} else
 					System.out.println("잘못된 입력입니다.");
@@ -336,6 +338,51 @@ class OpenBoard {
 			System.err.println("sql error = " + ex2.getMessage());
 			System.exit(1);
 		}
+	}
+
+	String getSSN(Connection conn, Scanner scanner) {
+		List<String> ssnList = new ArrayList<String>();
+		try {
+			while (true) {
+				System.out.print("제목으로 작품 검색: ");
+				String search = scanner.nextLine();
+
+				String sql = "select ssn, worktitle\r\n" + "from work w\r\n" + "where worktitle like ?";
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ps.setString(1, "%" + search + "%");
+				ResultSet rs = ps.executeQuery();
+				System.out.println();
+				System.out.println("'" + search + "' 검색 결과\n");
+				System.out.println("ssn | title");
+				System.out.println("--------------------");
+
+				while (rs.next()) {
+					System.out.println(rs.getString(1) + " | " + rs.getString(2));
+					ssnList.add(rs.getString(1));
+				}
+				if (ssnList.size() == 0) {
+					System.out.println("검색 결과가 없습니다 ...");
+					System.out.println("다시 검색을 시작합니다.\n");
+					continue;
+				} else {
+					while (true) {
+						System.out.print("원하는 작품의 ssn을 입력해주세요: ");
+						String inputSsn = scanner.nextLine();
+						for (String s : ssnList)
+							if (inputSsn.equals(s)) {
+								ps.close();
+								rs.close();
+								return inputSsn;
+							}
+						System.out.println("잘못된 입력입니다.\n");
+					}
+				}
+			}
+		} catch (SQLException ex2) {
+			System.err.println("sql error = " + ex2.getMessage());
+			System.exit(1);
+		}
+		return "";
 	}
 
 }
