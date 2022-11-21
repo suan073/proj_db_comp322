@@ -40,37 +40,50 @@ public class ggoggoDB {
 		
 	
 		/* 1. 로그인*/
-// 		UserInfo login = part1_bySuin.login(conn, scan);
-		
-		// test를 위한 hard coding
-		UserInfo login = new UserInfo("momomo", "abcdef", true); 
-//		System.out.println(login.isVaild());
-//		System.out.println(login.getID());
+ 		UserInfo login = Login.login(conn, scan);
+		System.out.println(login.isVaild());
+		System.out.println(login.getID());
 		
 		/* 2. 장르 설정*/
-//		if (login.isVaild()) {
-//			System.out.println("로그인 완료");
-//			System.out.println("장르설정");
-//			part2_bySuin.edit_interested_genre(conn, login, scan);
-//		}
-		/* 3. 검색 (1) 필터 설정 */
-		//FilterInfo temp = part3_1_bySuin.settingFilter(conn, scan);
-		//temp.show_all();
-		
-		System.out.println(part3_1_bySuin.search2(conn, scan));
-		//part3_1_bySuin.search(conn, scan, temp);
+		if (login.isVaild()) {
+			System.out.println("로그인 완료");
+			System.out.println("장르설정");
+			InterestedGernesSetting.edit_interested_genre(conn, login, scan);
 
-		/* main work */
-		String myUserId = "XoOoOong"; // arbitrary id
-		OpenBoard openboard = new OpenBoard(conn);
-		MyPage mypage = new MyPage(conn, myUserId);
+			OpenBoard openboard = new OpenBoard(conn);
+			MyPage mypage = new MyPage(conn, login.getID());
 
-		/* Main3. OpenBoard */
-		openboard.executeOpenBoard(conn, scan, myUserId);
+			while(true){
+				System.out.println("0.선호 장르 변경 1. 검색, 2. 타임라인 확인, 3. 게시판 확인, 4.마이페이지 5.종료");
+				int select = scan.nextInt();
+				scan.nextLine();
+				switch(select){
+					case 0:
+						InterestedGernesSetting.edit_interested_genre(conn, login, scan);
+						break;
+					case 1:
+						FilterInfo temp = Searching.settingFilter(conn, scan);
+						Searching.search(conn, scan, temp);
+						break;
+					case 2:
+						//
+						break;
+					case 3:
+						openboard.executeOpenBoard(conn, scan, login.getID());
+						break;
+					case 4:
+						mypage.executeMyPage(conn, scan);
 
-		/* Main4. MyPage */
-		mypage.executeMyPage(conn, scan);
-
+						break;
+					case 5:
+						break;
+				}
+				if(select==5){
+					break;
+				}
+			}
+			
+		}
 		System.out.println("프로그램 종료");
 
 		try {
