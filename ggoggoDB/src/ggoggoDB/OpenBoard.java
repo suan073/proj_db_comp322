@@ -6,8 +6,7 @@ import java.util.Scanner;
 
 class OpenBoard {
 	
-	void executeOpenBoard(Connection conn, String myUserId) {
-		Scanner scanner = new Scanner(System.in);
+	void executeOpenBoard(Connection conn, Scanner scanner, String myUserId) {
 		while (true) {
 			String choice;
 
@@ -26,10 +25,10 @@ class OpenBoard {
 					System.out.println("자세히 보고 싶은 글의 글번호를 입력하세요");
 					System.out.print("뒤로 가려면 'n'을 입력하세요: ");
 					String input = scanner.nextLine();
-					int targetLog = Integer.parseInt(input);
 
 					if (input.equals("n"))
 						break;
+					int targetLog = Integer.parseInt(input);
 					if(!inlogs(targetLog, logs))
 						System.out.println("잘못된 입력입니다.");
 					else {
@@ -66,7 +65,6 @@ class OpenBoard {
 				continue;
 			}
 		}
-		scanner.close();
 	}
 
 	int[] showBoard(Connection conn) {
@@ -157,12 +155,13 @@ class OpenBoard {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, logid);
 			ResultSet rs = ps.executeQuery();
-
+			
+			System.out.println();
 			if (rs.next()) {
-				String writerID = rs.getString(2);
-				Date date = rs.getDate(3);
-				String title = rs.getString(4);
-				String contents = rs.getString(5);
+				String writerID = rs.getString(1);
+				Date date = rs.getDate(2);
+				String title = rs.getString(3);
+				String contents = rs.getString(4);
 				System.out.println("글번호 #" + logid + "  제목: " + title);
 				System.out.println("작성자:" + writerID + "\t    " + date);
 				System.out.println(contents);
