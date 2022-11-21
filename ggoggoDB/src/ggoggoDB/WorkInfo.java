@@ -18,16 +18,16 @@ public class WorkInfo {
     public WorkInfo(ResultSet rs){
         try {
 
-            this.work_title = rs.getString("WORKTITLE");
-			this.media = rs.getString("MEDIA");
-            this.is_adult = rs.getString("ISADULT");
-            this.introduction = rs.getString("INTRODUCTION");
-            this.language = rs.getString("LANGUAGE");
-            this.num_of_episode = rs.getInt("NUMOFEPISODE");
-            this.status = rs.getString("STATUS");
-            this.origin_ssn = rs.getString("ORIGINSSN");
-            this.origin_title = rs.getString("ORIGINTITLE");
-            this.connected_type = rs.getString("CONNECTTYPE");
+            this.work_title = rs.getString(2);
+			this.media = rs.getString(3);
+            this.is_adult = rs.getString(4);
+            this.introduction = rs.getString(5);
+            this.language = rs.getString(6);
+            this.num_of_episode = rs.getInt(7);
+            this.status = rs.getString(8);
+            this.origin_ssn = rs.getString(9);
+            this.origin_title = rs.getString(13);
+            this.connected_type = rs.getString(11);
             
 
 		} catch (SQLException e) {
