@@ -66,7 +66,7 @@ public class ggoggoDB {
 						Searching.search(conn, scan, temp);
 						break;
 					case 2:
-						//
+						TimeLine.show(conn,login.getID());
 						break;
 					case 3:
 						openboard.executeOpenBoard(conn, scan, login.getID());
