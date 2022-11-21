@@ -48,7 +48,7 @@ public class ggoggoDB {
 		if (login.isVaild()) {
 			System.out.println("로그인 완료");
 			System.out.println("장르설정");
-			InterestedGernesSetting.edit_interested_genre(conn, login, scan);
+			InterestedGenresSetting.edit_interested_genre(conn, login, scan);
 
 			OpenBoard openboard = new OpenBoard(conn);
 			MyPage mypage = new MyPage(conn, login.getID());
@@ -59,7 +59,7 @@ public class ggoggoDB {
 				scan.nextLine();
 				switch(select){
 					case 0:
-						InterestedGernesSetting.edit_interested_genre(conn, login, scan);
+						InterestedGenresSetting.edit_interested_genre(conn, login, scan);
 						break;
 					case 1:
 						FilterInfo temp = Searching.settingFilter(conn, scan);

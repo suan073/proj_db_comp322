@@ -173,19 +173,19 @@ class sub_func_2{
 
             int cnt = 0;
             while(rs.next()){
-                String workTitle = rs.getString("WORKTITLE");
+                String workTitle = rs.getString(2);
                 switch(category){
                     case "TITLE":
                         break;
                     case "CREATOR":
-                        workTitle = rs.getString("crname") + " - " + workTitle;
+                        workTitle = rs.getString(4) + " - " + workTitle;
                         break;
                     case "KEYWORD":
-                        workTitle = rs.getString("keyword") + " - " + workTitle;
+                        workTitle = rs.getString(4) + " - " + workTitle;
                         break;
                 }
                 System.out.println(cnt+". "+workTitle);
-                result.add(rs.getString("SSN"));
+                result.add(rs.getString(1));
                 cnt++;
             }
 

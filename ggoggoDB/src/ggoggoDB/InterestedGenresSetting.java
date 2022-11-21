@@ -3,7 +3,7 @@ package ggoggoDB;
 import java.sql.*;
 import java.util.Scanner;
 
-public class InterestedGernesSetting {
+public class InterestedGenresSetting {
 
     private static void show_interested_genre (Connection conn, UserInfo info, boolean reverse) {
 		PreparedStatement pstmt = null;
@@ -67,7 +67,7 @@ public class InterestedGernesSetting {
 			pstmt.setString(1, gname);
 			rs = pstmt.executeQuery();
 			if(rs.next()){
-				id = rs.getInt("genreid");
+				id = rs.getInt(1);
 			}
 			rs.close();
 		}catch(SQLException e){
