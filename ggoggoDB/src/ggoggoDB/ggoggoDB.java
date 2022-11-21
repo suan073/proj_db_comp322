@@ -48,18 +48,17 @@ public class ggoggoDB {
 //		System.out.println(login.getID());
 		
 		/* 2. 장르 설정*/
-		if (login.isVaild()) {
-			System.out.println("로그인 완료");
-			System.out.println("장르설정");
-			part2_bySuin.edit_interested_genre(conn, login, scan);
-		}
+//		if (login.isVaild()) {
+//			System.out.println("로그인 완료");
+//			System.out.println("장르설정");
+//			part2_bySuin.edit_interested_genre(conn, login, scan);
+//		}
 		/* 3. 검색 (1) 필터 설정 */
-		FilterInfo temp = part3_1_bySuin.settingFilter(conn, scan);
-		temp.show_all();
-
+		//FilterInfo temp = part3_1_bySuin.settingFilter(conn, scan);
+		//temp.show_all();
 		
-		System.out.println();
-		part3_1_bySuin.search(conn, scan, temp);
+		System.out.println(part3_1_bySuin.search2(conn, scan));
+		//part3_1_bySuin.search(conn, scan, temp);
 
 		/* main work */
 		Scanner scanner = new Scanner(System.in);

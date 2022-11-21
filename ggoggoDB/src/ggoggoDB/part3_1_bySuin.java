@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import oracle.jdbc.proxy.annotation.GetCreator;
 import oracle.net.aso.q;
 import oracle.security.o3logon.a;
 
@@ -166,7 +167,6 @@ class sub_func_2{
         sql.append("%' ");
         sql.append(") W, (select Writeabout, sum(likes) as sumoflikes from pjlog ");
         sql.append("group by Writeabout) O where W.ssn = O.Writeabout order by sumoflikes desc ");
-
         try {
 			pstmt = conn.prepareStatement(sql.toString());
             rs = pstmt.executeQuery();
@@ -237,6 +237,56 @@ class sub_func_2{
     }
 
 }
+
+class SearchInfo {
+    String input;
+    String category_full;
+    
+
+    public SearchInfo (Scanner scan) {}
+    
+    public boolean select_search_category(Scanner scan){
+
+        System.out.println(">> 검색 카테고리를 선택해주세요.");
+        System.out.println(">> [t : title, c: creator, k: keyword]");
+        System.out.println(">> 중 검색하기를 원하는 카태고리의 '첫 소문자'를 입력해주세요");
+        System.out.println(">> (검색의 종료를 원한다면 'end'를 입력하세요.)");
+
+        while(true){
+            String category_spel = scan.nextLine();
+            this.category_full = sub_func_2.spel_2_String(category_spel);
+            if(this.category_full.equals("Fail")){
+                System.out.println("잘못 입력하셨습니다 다시 입력해주세요.");
+                continue;
+            }
+            else if(this.category_full.equals("END")){
+                return false;
+            }
+            else{
+                System.out.println(this.category_full+"에서 검색하겠습니다.");
+                return true;
+            }
+        }
+    }
+
+    public boolean input_search_word(Scanner scan){
+        System.out.println("검색할 단어를 입력해주세요");
+        this.input = scan.nextLine();
+        if(this.input.equals("end")){
+            return false;
+        }
+        return true;
+    }
+    
+    public ArrayList<String> get_Result_List(Connection conn, Scanner scan, FilterInfo filter){
+        ArrayList<String> result = null;
+        System.out.println("검색어 '"+this.input+"'를 포함하는 "+this.category_full+"의 작품은 다음과 같습니다");
+        result = sub_func_2.search_the_word(conn, scan, filter, this.category_full, this.input);
+        return result;
+    }
+}
+
+
 public class part3_1_bySuin {
     /*
         1. 필터 설정(language, isAdult, Media, Status)
@@ -251,7 +301,6 @@ public class part3_1_bySuin {
         String filter_name = "";
         
         System.out.println("********* 3-1-1. 검색 전 필터 설정 *********");
-        
         FilterInfo youFilterInfo = new FilterInfo();
         
         System.out.println(">> 현재 필터 설정");
@@ -283,62 +332,41 @@ public class part3_1_bySuin {
     // 2. 입력어 검색(title, creator, keyword) (3. 보여주는 순서는 work를 각 log의 like 합이 높은 순서대로 보여줌)
     public static void search(Connection conn, Scanner scan, FilterInfo filter){
         ArrayList<String> result = null;
-        String category_spel;
-        String category_full;
         System.out.println(".\n.\n.\n");
         System.out.println("********* 3-1-2. 필터가 적용된 입력어 검색 시작 *********");
-        System.out.println(">> 검색 파트를 선택해주세요.");
-        System.out.println(">> [t : title, c: creator, k: keyword]");
-        System.out.println(">> 중 검색하기를 원하는 카태고리의 '첫 소문자'를 입력해주세요");
-        System.out.println(">> (검색의 종료를 원한다면 'end'를 입력하세요.)");
+        
         
         while(true){
-            category_spel = scan.nextLine();
-            category_full = sub_func_2.spel_2_String(category_spel);
-            if(category_full.equals("Fail")){
-                System.out.println("잘못 입력하셨습니다 다시 입력해주세요.");
-                continue;
+            SearchInfo info = new SearchInfo(scan);
+            if (info.select_search_category(scan) == false){
+                return;
             }
-            if(category_full.equals("END")){
-                break;
+            while(info.input_search_word(scan)){
+                result = info.get_Result_List(conn, scan, filter);
+                sub_func_2.select_one_work_show_detail(conn,scan,result);
+                System.out.println("현재 검색 결과 기록을 지우고 새로운 검색을 시작합니다.");
+                System.out.println(".\n.\n.\n");
             }
-            String input;
-            System.out.println(category_full+"에서 검색하겠습니다.");
-            System.out.println("검색할 단어를 입력해주세요");
-            
-            input = scan.nextLine();
-            if(input.equals("end")){
-                break;
-            }
-            System.out.println("검색어를 포함하는 "+category_full+"의 작품은 다음과 같습니다");
-
-            result = sub_func_2.search_the_word( conn, scan, filter, category_full, input);
-
-            System.out.println();
-            System.out.println("해당 검색 결과 중 자세히 살펴보고 싶으시면 (Y)를 다른 작업을 하고 싶으시면 end를 입력하세요.");
-            while(true) {
-	            String YesOrNo = scan.nextLine();
-	            if(YesOrNo.equals("Y")||YesOrNo.equals("y")){
-	                // 선택 결과 보여주기 시작
-	                sub_func_2.select_one_work_show_detail(conn, scan, result);
-	            }
-	            else if(YesOrNo.equals("end")){
-	            	break;
-	            }
-	            else {
-	            	System.out.println("잘못 입력하셨습니다. 다시입력해주세요.");
-	            }
-            }
-            System.out.println();
-            System.out.println("현재 검색 결과 기록을 지우고 새로운 검색을 시작합니다.");
-            System.out.println();
-            System.out.println(".\n.\n.\n");
-            System.out.println(">> 검색 파트를 선택해주세요.");
-            System.out.println(">> [t : title, c: creator, k: keyword]");
-            System.out.println(">> 중 검색하기를 원하는 카태고리의 '첫 소문자'를 입력해주세요");
-            System.out.println(">> (검색의 종료를 원한다면 'end'를 입력하세요.)");
+            return;
         }
     } 
-
-
+    
+    public static String search2(Connection conn, Scanner scan){
+        ArrayList<String> result = null;
+        FilterInfo temp = new FilterInfo();
+        int input = 0;
+        
+        SearchInfo info = new SearchInfo(scan);
+        info.select_search_category(scan);
+        info.input_search_word(scan);
+        result = info.get_Result_List(conn, scan, temp);
+        
+        System.out.println("사용할 work 번호를 선택하세요.");
+        input = scan.nextInt();
+        scan.nextLine();
+        
+        return result.get(input);
+        
+    } 
+    
 }
