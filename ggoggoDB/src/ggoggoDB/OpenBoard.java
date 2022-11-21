@@ -14,6 +14,7 @@ class OpenBoard {
 			System.out.println("*** 게시판 ***");
 			System.out.println("1. 전체 게시판 보기");
 			System.out.println("2. 게시글 검색하기");
+			System.out.println("3. 게시글 작성하기");
 			System.out.println("0. 돌아가기");
 
 			choice = scanner.nextLine();
@@ -58,6 +59,8 @@ class OpenBoard {
 
 				searchLog(conn, search);
 
+			} else if (choice.equals("3")) {
+				// writeLog();
 			} else if (choice.equals("0")) {
 				break;
 			} else {
@@ -199,12 +202,12 @@ class OpenBoard {
 
 	void writeComment(Connection conn, int cnum, String text, String userid, int logid) {
 		try {
-			Date today = new Date();
-			String sql = "insert into follow values (?, ?, ?, ?)";
+			java.sql.Date today = new java.sql.Date(System.currentTimeMillis());
+			String sql = "insert into pjcomment values (?, ?, ?, ?, ?)";
 			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(1, cnum);
+			ps.setInt(1, cnum+1);
 			ps.setString(2, text);
-			ps.setDate(3, (java.sql.Date) today);
+			ps.setDate(3, today);
 			ps.setString(4, userid);
 			ps.setInt(5, logid);
 
@@ -221,6 +224,10 @@ class OpenBoard {
 			System.err.println("sql error = " + ex2.getMessage());
 			System.exit(1);
 		}
+	}
+	
+	void writeLog() {
+		
 	}
 
 }
