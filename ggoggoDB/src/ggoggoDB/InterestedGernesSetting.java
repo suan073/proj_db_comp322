@@ -3,7 +3,7 @@ package ggoggoDB;
 import java.sql.*;
 import java.util.Scanner;
 
-public class part2_bySuin {
+public class InterestedGernesSetting {
 
     private static void show_interested_genre (Connection conn, UserInfo info, boolean reverse) {
 		PreparedStatement pstmt = null;

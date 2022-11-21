@@ -3,7 +3,7 @@ package ggoggoDB;
 import java.sql.*;
 import java.util.Scanner;
 
-public class part1_bySuin {
+public class Login {
 
 	private static boolean check_password_correct(Connection conn, String iID, String iPW){
 		// 로그인 성공시 true, 실패시 false를 반환한다.

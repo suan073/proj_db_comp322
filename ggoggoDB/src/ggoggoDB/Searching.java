@@ -287,7 +287,7 @@ class SearchInfo {
 }
 
 
-public class part3_1_bySuin {
+public class Searching {
     /*
         1. 필터 설정(language, isAdult, Media, Status)
         2. 입력어 검색(title,creator,keyword)
