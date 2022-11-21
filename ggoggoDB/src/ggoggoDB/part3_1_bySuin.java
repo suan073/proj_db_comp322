@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import oracle.net.aso.q;
 import oracle.security.o3logon.a;
 
 class sub_func_1{
@@ -137,14 +138,25 @@ class sub_func_2{
         ResultSet rs = null;
         ArrayList<String> result = new ArrayList<>();
 
-        sql.append("select W.ssn, Worktitle, sumoflikes from ( select * from ( ");
+        sql.append("select W.ssn, Worktitle, sumoflikes ");
+        switch(category){
+            case "TITLE":
+                break;
+            case "CREATOR":
+                sql.append(", crname ");
+                break;
+            case "KEYWORD":
+                sql.append(", keyword ");
+                break;
+        }
+        sql.append("from ( select * from ( ");
         sql.append(filter.make_where_sql());
         switch(category){
             case "TITLE":
                 sql.append(") where WORKTITLE like '%");
                 break;
             case "CREATOR":
-                sql.append(") W, creator C, made M where W.ssn = M.wssn and M.wssn = C.creatorid and crname like '%");
+                sql.append(") W, creator C, made M where W.ssn = M.wssn and M.creatorid = C.creatorid and crname like '%");
                 break;
             case "KEYWORD":
                 sql.append(") W, keyword K where W.ssn =  K.wssn and keyword like '%");
@@ -162,6 +174,16 @@ class sub_func_2{
             int cnt = 0;
             while(rs.next()){
                 String workTitle = rs.getString("WORKTITLE");
+                switch(category){
+                    case "TITLE":
+                        break;
+                    case "CREATOR":
+                        workTitle = rs.getString("crname") + " - " + workTitle;
+                        break;
+                    case "KEYWORD":
+                        workTitle = rs.getString("keyword") + " - " + workTitle;
+                        break;
+                }
                 System.out.println(cnt+". "+workTitle);
                 result.add(rs.getString("SSN"));
                 cnt++;
@@ -174,60 +196,44 @@ class sub_func_2{
     }
 
     static void show_one_work_detail(Connection conn, String ssn){
+        WorkInfo work = null;
         StringBuffer sql = new StringBuffer();
-        sql.append("select * from work where ssn = ?");
+        sql.append("select * \n"
+        		+ "    from work N\n"
+        		+ "    left outer join\n"
+        		+ "    (select ssn, worktitle as origintitle from work) O\n"
+        		+ "    on N.originssn = O.ssn\n"
+        		+ "where N.ssn = ?");
         try {
-			PreparedStatement pstmt = conn.prepareStatement(ssn);
+			PreparedStatement pstmt = conn.prepareStatement(sql.toString());
             pstmt.setString(1, ssn);
             ResultSet rs = pstmt.executeQuery();
             if(rs.next()){
-                StringBuffer result = new StringBuffer();
-                String work_title = rs.getString("WORKTITLE");
-                String media = rs.getString("MEDIA");
-                String is_adult = rs.getString("ISADULT");
-                String introduciton = rs.getString("INTRODUCTION");
-                String language = rs.getString("LANGUAGE");
-                int num_of_episode = rs.getInt("NUMOFEPISODE");
-                String status = rs.getString("STATUS");
-                String origin_ssn = rs.getString("ORIGINSSN");
-                String connected_type = rs.getString("CONNECTTYPE");
-
-                result.append("----------------------------------\n");
-                result.append("작품 제목 : "+work_title);
-                result.append("매체 : "+media);
-                result.append("미성년자 감상 제한 여부 : "+is_adult);
-                result.append("작품 소개 \n"+introduciton);
-                result.append("언어 : "+language);
-                if(num_of_episode != 1){
-                    result.append("에피소드 수 : " + num_of_episode);
-                }
-                result.append("현재 상태 : "+status);
-                if(origin_ssn != null){
-
-                    /* 
-                     * 현재 여기서 멈춤 
-                     * origin ssn을 갖고 원래 작품 이름을 데리고 와야합니다.
-                     * 내가 생각하는 형태는 "해당 작품은 ~~의 XX화 입니다."
-                     * 이렇게 출력하는 거임. 
-                     */
-                    //result.append("() 해당 작품은 " + );
-                    
-                }
-
+                work = new WorkInfo(rs);
             }
+            rs.close();
+            pstmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-        
+        if(work != null){
+            work.show();
+        }
     }
 
     public static void select_one_work_show_detail(Connection conn, Scanner scan, ArrayList<String> work_list){
-        System.out.println(".\n.\n.\n");
-        System.out.println("살펴 싶은 작품의 번호를 입력하세요.");
-        int input = scan.nextInt();
-        scan.nextLine();
-        System.out.println(input+"번의 작품에 관한 상세 정보는 다음과 같습니다");
-        show_one_work_detail(conn, work_list.get(input)); 
+        while(true){
+            System.out.println(".\n.\n.\n");
+            System.out.println("살펴 싶은 작품의 번호를 입력하세요. 자세히 살펴보기를 종료하고 싶으면 '-1'을 입력하세요.");
+            int input = scan.nextInt();
+            scan.nextLine();
+            if(input == -1){
+                break;
+            }
+            System.out.println(input+"번의 작품에 관한 상세 정보는 다음과 같습니다 "+work_list.get(input));
+            
+            show_one_work_detail(conn, work_list.get(input)); 
+        }
     }
 
 }
@@ -246,17 +252,16 @@ public class part3_1_bySuin {
         
         System.out.println("********* 3-1-1. 검색 전 필터 설정 *********");
         
-        
         FilterInfo youFilterInfo = new FilterInfo();
+        
+        System.out.println(">> 현재 필터 설정");
+        youFilterInfo.show_all();
+        System.out.println(">> 필터 설정을 시작합니다.");
+        System.out.println(">> [l : language, i : isAdult, m: Media, s : Status]");
+        System.out.println(">> 중 필터를 걸기를 원하는 카태고리의 '첫 소문자'를 입력해주세요");
+        System.out.println(">> (설정 변경의 종료를 원한다면 'end'를 입력하세요.)");
 
         while(true){
-            System.out.println(">> 현재 필터 설정");
-            youFilterInfo.show_all();
-
-            System.out.println(">> 필터 설정을 시작합니다.");
-            System.out.println(">> [l : language, i : isAdult, m: Media, s : Status]");
-            System.out.println(">> 중 필터를 걸기를 원하는 카태고리의 '첫 소문자'를 입력해주세요");
-		    System.out.println(">> (설정 변경의 종료를 원한다면 'end'를 입력하세요.)");
             select = scan.nextLine();
             filter_name = sub_func_1.spel_2_String(select);
             if(filter_name.equals("Fail")){
@@ -267,6 +272,8 @@ public class part3_1_bySuin {
                 break;
             }
             sub_func_1.set_one_category_filter(conn, scan, filter_name, youFilterInfo);
+            youFilterInfo.show_all();
+            System.out.println(">> [l : language, i : isAdult, m: Media, s : Status]");
         }
 		System.out.println("********* 검색 전 필터 설정 완료 *********");
 
@@ -280,12 +287,12 @@ public class part3_1_bySuin {
         String category_full;
         System.out.println(".\n.\n.\n");
         System.out.println("********* 3-1-2. 필터가 적용된 입력어 검색 시작 *********");
+        System.out.println(">> 검색 파트를 선택해주세요.");
+        System.out.println(">> [t : title, c: creator, k: keyword]");
+        System.out.println(">> 중 검색하기를 원하는 카태고리의 '첫 소문자'를 입력해주세요");
+        System.out.println(">> (검색의 종료를 원한다면 'end'를 입력하세요.)");
         
         while(true){
-            System.out.println(">> 검색 파트를 선택해주세요.");
-            System.out.println(">> [t : title, c: creator, k: keyword]");
-            System.out.println(">> 중 검색하기를 원하는 카태고리의 '첫 소문자'를 입력해주세요");
-            System.out.println(">> (검색의 종료를 원한다면 'end'를 입력하세요.)");
             category_spel = scan.nextLine();
             category_full = sub_func_2.spel_2_String(category_spel);
             if(category_full.equals("Fail")){
@@ -308,17 +315,28 @@ public class part3_1_bySuin {
             result = sub_func_2.search_the_word( conn, scan, filter, category_full, input);
 
             System.out.println();
-            System.out.println("해당 검색 결과 중 자세히 살펴보고 싶으시면 (Y)를 누르세요.");
-            String YesOrNo = scan.nextLine();
-            if(YesOrNo.equals("Y")){
-                // 선택 결과 보여주기 시작
-                sub_func_2.select_one_work_show_detail(conn, scan, result);
+            System.out.println("해당 검색 결과 중 자세히 살펴보고 싶으시면 (Y)를 다른 작업을 하고 싶으시면 end를 입력하세요.");
+            while(true) {
+	            String YesOrNo = scan.nextLine();
+	            if(YesOrNo.equals("Y")||YesOrNo.equals("y")){
+	                // 선택 결과 보여주기 시작
+	                sub_func_2.select_one_work_show_detail(conn, scan, result);
+	            }
+	            else if(YesOrNo.equals("end")){
+	            	break;
+	            }
+	            else {
+	            	System.out.println("잘못 입력하셨습니다. 다시입력해주세요.");
+	            }
             }
-
             System.out.println();
             System.out.println("현재 검색 결과 기록을 지우고 새로운 검색을 시작합니다.");
             System.out.println();
             System.out.println(".\n.\n.\n");
+            System.out.println(">> 검색 파트를 선택해주세요.");
+            System.out.println(">> [t : title, c: creator, k: keyword]");
+            System.out.println(">> 중 검색하기를 원하는 카태고리의 '첫 소문자'를 입력해주세요");
+            System.out.println(">> (검색의 종료를 원한다면 'end'를 입력하세요.)");
         }
     } 
 
