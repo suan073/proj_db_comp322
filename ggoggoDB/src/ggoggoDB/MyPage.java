@@ -29,8 +29,7 @@ class MyPage {
 		}
 	}
 	
-	void executeMyPage(Connection conn) {
-		Scanner scanner = new Scanner(System.in);
+	void executeMyPage(Connection conn, Scanner scanner) {
 		while (true) {
 			String choice;
 
@@ -42,8 +41,9 @@ class MyPage {
 
 			choice = scanner.nextLine();
 
-			if (choice.equals("1")) {
-				// not yet
+			if (choice.equals("1")) {				
+				updatePassword(conn, scanner);
+				
 			} else if (choice.equals("2")) {
 				while (true) {
 
@@ -103,5 +103,45 @@ class MyPage {
 		for (String fuser : following)
 			System.out.println(fuser);
 		System.out.println();
+	}
+	
+	void updatePassword(Connection conn, Scanner scan) {
+		try {
+			System.out.print("기존 비밀번호를 입력하세요: ");
+			String pw = scan.nextLine();
+			
+			String sql = "select pjuser.password from pjuser where pjuserid=?";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, userid);
+			ResultSet rs = ps.executeQuery();
+
+			if (!rs.next())
+				System.out.print("오류!");
+			else {
+				if (rs.getString(1).equals(pw)) {
+					System.out.print("새 비밀번호를 입력하세요: ");
+					String newPw = scan.nextLine();
+					
+					sql = "update pjuser set password=? where pjuserid=?";
+					ps = conn.prepareStatement(sql);
+					ps.setString(1, newPw);
+					ps.setString(2, userid);
+
+					int res = ps.executeUpdate();
+					if(res == 1)
+						System.out.println("비밀번호가 변경되었습니다.");
+					else
+						System.out.println("오류!");
+				}
+				else
+					System.out.println("잘못된 비밀번호입니다.");
+			}
+			
+			ps.close();
+			rs.close();
+		} catch (SQLException ex2) {
+			System.err.println("sql error = " + ex2.getMessage());
+			System.exit(1);
+		}
 	}
 }

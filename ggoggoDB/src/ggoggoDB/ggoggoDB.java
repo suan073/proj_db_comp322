@@ -63,18 +63,19 @@ public class ggoggoDB {
 
 		/* main work */
 		String myUserId = "XoOoOong"; // arbitrary id
-		OpenBoard openboard = new OpenBoard();
+		OpenBoard openboard = new OpenBoard(conn);
 		MyPage mypage = new MyPage(conn, myUserId);
 
 		/* Main3. OpenBoard */
-		openboard.executeOpenBoard(conn, myUserId);
+		openboard.executeOpenBoard(conn, scan, myUserId);
 
 		/* Main4. MyPage */
-		mypage.executeMyPage(conn);
+		mypage.executeMyPage(conn, scan);
 
 		System.out.println("프로그램 종료");
 
 		try {
+			scan.close();
 			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
