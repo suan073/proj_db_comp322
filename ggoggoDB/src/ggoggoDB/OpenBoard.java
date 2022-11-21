@@ -128,7 +128,8 @@ class OpenBoard {
 			int logNum = 0;
 			Statement stmt = conn.createStatement();
 			String sql = "select pjlogid, writerid, pjlogdate, pjlogtitle, pjcontents from pjlog\r\n"
-					+ "where pjpublic='Y' order by pjlogdate desc";
+
+					+ "order by pjlogdate desc";
 			ResultSet rs = stmt.executeQuery(sql);
 			System.out.println();
 			System.out.println("* 전체 게시판 *");
@@ -160,7 +161,9 @@ class OpenBoard {
 		try {
 			int logNum = 0;
 			String sql = "select pjlogid, writerid, pjlogdate, pjlogtitle, pjcontents from pjlog\r\n"
-					+ "where pjpublic='Y' and (pjlogtitle like ? or pjcontents like ? or writerid like ?) order by pjlogdate desc";
+
+					+ "where pjlogtitle like ? or pjcontents like ? or writerid like ? order by pjlogdate desc";
+
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, "%" + search + "%");
 			ps.setString(2, "%" + search + "%");
@@ -347,7 +350,7 @@ class OpenBoard {
 				System.out.print("제목으로 작품 검색: ");
 				String search = scanner.nextLine();
 
-				String sql = "select ssn, worktitle\r\n" + "from work w\r\n" + "where worktitle like ?";
+				String sql = "select ssn, worktitle from work w where worktitle like ?";
 				PreparedStatement ps = conn.prepareStatement(sql);
 				ps.setString(1, "%" + search + "%");
 				ResultSet rs = ps.executeQuery();
