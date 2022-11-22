@@ -32,8 +32,8 @@ class OtherUser {
 		try {
 			int logNum = 0;
 
-			String sql = "select writerid, pjlogdate, pjlogtitle, pjcontents\r\n" + "from pjlog\r\n"
-					+ "where writerid=?\r\n" + "order by pjlogdate desc";
+			String sql = "select writerid, pjlogdate, pjlogtitle, pjcontents from pjlog\r\n"
+					+ "where writerid=? and pjpublic='Y' order by pjlogdate desc";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, oUserId);
 			ResultSet rs = ps.executeQuery();

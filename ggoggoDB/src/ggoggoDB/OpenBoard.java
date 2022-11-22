@@ -1,19 +1,21 @@
 package ggoggoDB;
 
 import java.sql.*; // import JDBC package
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 class OpenBoard {
 	int logNum;
-	
+
 	OpenBoard(Connection conn) {
 		logNum = 0;
 		try {
 			Statement stmt = conn.createStatement();
 			String sql = "select * from pjlog";
 			ResultSet rs = stmt.executeQuery(sql);
-			
+
 			while (rs.next())
 				logNum++;
 			stmt.close();
@@ -93,8 +95,8 @@ class OpenBoard {
 		try {
 			int logNum = 0;
 			Statement stmt = conn.createStatement();
-			String sql = "select pjlogid, writerid, pjlogdate, pjlogtitle, pjcontents\r\n" + "from pjlog\r\n"
-					+ "order by pjlogdate desc";
+			String sql = "select pjlogid, writerid, pjlogdate, pjlogtitle, pjcontents from pjlog\r\n"
+					+ "where pjpublic='Y' order by pjlogdate desc";
 			ResultSet rs = stmt.executeQuery(sql);
 			System.out.println();
 			System.out.println("* 전체 게시판 *");
@@ -125,8 +127,8 @@ class OpenBoard {
 		int[] logs = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 		try {
 			int logNum = 0;
-			String sql = "select pjlogid, writerid, pjlogdate, pjlogtitle, pjcontents\r\n" + "from pjlog\r\n"
-					+ "where pjlogtitle like ? or pjcontents like ? or writerid like ?\r\n" + "order by pjlogdate desc";
+			String sql = "select pjlogid, writerid, pjlogdate, pjlogtitle, pjcontents from pjlog\r\n"
+					+ "where pjpublic='Y' and (pjlogtitle like ? or pjcontents like ? or writerid like ?) order by pjlogdate desc";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, "%" + search + "%");
 			ps.setString(2, "%" + search + "%");
@@ -171,8 +173,7 @@ class OpenBoard {
 	int showLogComments(Connection conn, int logid) {
 		int commentNum = 0;
 		try {
-			String sql = "select writerid, pjlogdate, pjlogtitle, pjcontents\r\n" + "from pjlog\r\n"
-					+ "where pjlogid=?";
+			String sql = "select writerid, pjlogdate, pjlogtitle, pjcontents from pjlog where pjlogid=?";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, logid);
 			ResultSet rs = ps.executeQuery();
@@ -191,8 +192,7 @@ class OpenBoard {
 			System.out.println("--------------------");
 			System.out.println();
 
-			sql = "select writerid, commdate, pjtext\r\n" + "from pjcomment\r\n" + "where targetposting=?\r\n"
-					+ "order by commdate asc";
+			sql = "select writerid, commdate, pjtext from pjcomment where targetposting=? order by commdate asc";
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, logid);
 			rs = ps.executeQuery();
@@ -255,12 +255,27 @@ class OpenBoard {
 			System.out.print("제목을 입력하세요: ");
 			input = scanner.nextLine();
 			ps.setString(2, input);
-			
+
+			while (true) {
+				System.out.print("작품에 대한 글 작성을 원하시나요(y/n): ");
+				input = scanner.nextLine();
+				if (input.equals("n")) {
+					ps.setString(8, null);
+					break;
+				} else if (input.equals("y")) {
+					Searching s = new Searching();
+					String wssn = s.search2(conn, scanner);
+					ps.setString(8, wssn);
+					break;
+				} else
+					System.out.println("잘못된 입력입니다.");
+			}
+
 			while (true) {
 				System.out.print("공개여부를 설정하세요(y/n): ");
 				input = scanner.nextLine();
 				if (input.equals("n") || input.equals("y")) {
-					ps.setString(3, input);
+					ps.setString(3, input.toUpperCase());
 					break;
 				} else {
 					System.out.println("잘못된 입력입니다.");
@@ -275,7 +290,6 @@ class OpenBoard {
 			ps.setInt(4, 0);
 			ps.setDate(6, today);
 			ps.setString(7, userid);
-			ps.setString(8, null);
 
 			int res = ps.executeUpdate();
 			if (res == 1) {
