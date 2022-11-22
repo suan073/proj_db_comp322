@@ -20,7 +20,7 @@ public class ggoggoDB {
 			// Load a JDBC driver for Oracle DBMS
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			// Get a Connection object 
-			System.out.println("Success!");
+			//System.out.println("Success!");
 		}catch(ClassNotFoundException e) {
 			System.err.println("error = " + e.getMessage());
 			System.exit(1);
@@ -29,7 +29,7 @@ public class ggoggoDB {
 		// Make a connection
 		try{
 			conn = DriverManager.getConnection(URL, USER_UNIVERSITY, USER_PASSWD); 
-			System.out.println("Connected.");
+			//System.out.println("Connected.");
 			conn.setAutoCommit(false);
 		}catch(SQLException ex) {
 			ex.printStackTrace();
@@ -41,8 +41,8 @@ public class ggoggoDB {
 	
 		/* 1. 로그인*/
  		UserInfo login = Login.login(conn, scan);
-		System.out.println(login.isVaild());
-		System.out.println(login.getID());
+		//System.out.println(login.isVaild());
+		//System.out.println(login.getID());
 		
 		/* 2. 장르 설정*/
 		if (login.isVaild()) {
