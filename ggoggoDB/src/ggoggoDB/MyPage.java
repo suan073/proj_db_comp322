@@ -128,8 +128,10 @@ class MyPage {
 					ps.setString(2, userid);
 
 					int res = ps.executeUpdate();
-					if (res == 1)
+					if (res == 1) {
 						System.out.println("비밀번호가 변경되었습니다.");
+						conn.commit();
+					}
 					else
 						System.out.println("오류!");
 				} else
