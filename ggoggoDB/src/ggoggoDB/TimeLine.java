@@ -20,13 +20,13 @@ public class TimeLine {
 		StringBuffer sql = new StringBuffer();
 		sql.append("(select writerid, pjlogtitle, pjcontents, pjlogdate, pjlogid\n");
 		sql.append("from pjlog\n");
-		sql.append("where writerid in (select pjuserid\n");
+		sql.append("where pjpublic='Y' and writerid in (select pjuserid\n");
 		sql.append("                from follow\n");
 		sql.append("                where followerid=?))\n");
 		sql.append("union\n");
 		sql.append("(select writerid, pjlogtitle, pjcontents, pjlogdate, pjlogid\n");
 		sql.append("from pjlog L, have H\n");
-		sql.append("where L.writeabout = H.wssn\n");
+		sql.append("where pjpublic='Y' and L.writeabout = H.wssn\n");
 		sql.append("and H.genreid in (select I.genreid \n");
 		sql.append("                from interested I\n");
 		sql.append("                where I.pjuserid = ?)) \n");

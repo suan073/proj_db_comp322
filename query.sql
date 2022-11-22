@@ -1,4 +1,3 @@
-
 --Interested
 --1
 (select g.genreid, g.genrename 
@@ -49,12 +48,12 @@ select * from pjlog;
 --2
 select pjlogid, writerid, pjlogdate, pjlogtitle, pjcontents 
 from pjlog 
-where pjlogtitle like '%a%' or pjcontents like '%a%' or writerid like '%a%'
+where pjpublic='Y' and (pjlogtitle like '%a%' or pjcontents like '%a%' or writerid like '%a%')
 order by pjlogdate desc;
 --3
 select writerid, pjlogdate, pjlogtitle, pjcontents 
 from pjlog 
-where pjlogid='XoOoOong';
+where pjlogid=44;
 --4
 --insert into pjcomment values (, ?, ?, ?, ?);
 --5
@@ -66,7 +65,7 @@ select * from pjuser where pjuserid='momomo';
 --2
 select writerid, pjlogdate, pjlogtitle, pjcontents 
 from pjlog 
-where writerid='momomo'
+where pjpublic='Y' and writerid='momomo'
 order by pjlogdate desc;
 --3
 --delete from follow where pjuserid=? and followerid=?
@@ -125,13 +124,13 @@ where N.ssn = 021;
 --1
 (select writerid, pjlogtitle, pjcontents, pjlogdate, pjlogid
 from pjlog
-where writerid in (select pjuserid
+where pjpublic='Y' and writerid in (select pjuserid
                 from follow
                 where followerid='XoOoOong'))
 union
 (select writerid, pjlogtitle, pjcontents, pjlogdate, pjlogid
 from pjlog L, have H
-where L.writeabout = H.wssn
+where pjpublic='Y' and L.writeabout = H.wssn
 and H.genreid in (select I.genreid 
                 from interested I
                 where I.pjuserid = 'momomo')) 
