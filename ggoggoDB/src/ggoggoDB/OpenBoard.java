@@ -73,11 +73,43 @@ class OpenBoard {
 				}
 
 			} else if (choice.equals("2")) {
+				while (true) {
+					System.out.print("게시글 검색: ");
+					String search = scanner.nextLine();
 
-				System.out.print("게시글 검색: ");
-				String search = scanner.nextLine();
+					int logs[] = searchLog(conn, search);
 
-				searchLog(conn, search);
+					if (logs[0] == -1)
+						continue;
+					System.out.println("자세히 보고 싶은 글의 글번호를 입력하세요");
+					System.out.print("뒤로 가려면 'n'을 입력하세요: ");
+					String input = scanner.nextLine();
+
+					if (input.equals("n"))
+						break;
+					int targetLog = Integer.parseInt(input);
+					if (!inlogs(targetLog, logs))
+						System.out.println("잘못된 입력입니다.");
+					else {
+						while (true) {
+							int cNum = showLogComments(conn, targetLog);
+							System.out.print("댓글을 작성하시겠습니까? (y/n): ");
+							choice = scanner.nextLine();
+
+							if (choice.equals("y")) {
+								System.out.print("작성할 댓글을 입력하세요: ");
+								String comment = scanner.nextLine();
+								writeComment(conn, cNum, comment, myUserId, targetLog);
+							} else if (choice.equals("n")) {
+								System.out.println("이전으로 돌아갑니다.");
+								break;
+							} else {
+								System.out.println("잘못된 입력입니다.");
+							}
+						}
+						break;
+					}
+				}
 
 			} else if (choice.equals("3")) {
 				writeLog(conn, scanner, myUserId);
