@@ -323,6 +323,8 @@ public class Searching {
             sub_func_1.set_one_category_filter(conn, scan, filter_name, youFilterInfo);
             youFilterInfo.show_all();
             System.out.println(">> [l : language, i : isAdult, m: Media, s : Status]");
+            System.out.println(">> 중 필터를 걸기를 원하는 카태고리의 '첫 소문자'를 입력해주세요");
+            System.out.println(">> (설정 변경의 종료를 원한다면 'end'를 입력하세요.)");
         }
 		System.out.println("********* 검색 전 필터 설정 완료 *********");
 

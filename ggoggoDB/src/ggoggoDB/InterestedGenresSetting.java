@@ -108,6 +108,7 @@ public class InterestedGenresSetting {
 		String sql = "Insert into INTERESTED (PJUSERID,GENREID) values (?,?)";
 		try{
 			pstmt = conn.prepareStatement(sql);
+			//System.out.println(sql);
 			pstmt.setString(1, userID);
 			pstmt.setInt(2, gID);
 			pstmt.executeUpdate();

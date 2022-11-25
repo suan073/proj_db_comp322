@@ -46,8 +46,7 @@ public class ggoggoDB {
 		
 		/* 2. 장르 설정*/
 		if (login.isVaild()) {
-			System.out.println("로그인 완료");
-			System.out.println("장르설정");
+			System.out.println("로그인 성공");
 			InterestedGenresSetting.edit_interested_genre(conn, login, scan);
 
 			OpenBoard openboard = new OpenBoard(conn);
@@ -83,6 +82,8 @@ public class ggoggoDB {
 				}
 			}
 			
+		}else {
+			System.out.println("로그인 실패");
 		}
 		System.out.println("프로그램 종료");
 
