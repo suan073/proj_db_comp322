@@ -5,48 +5,32 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Login {
+public class User {
 	final private Connection conn;
 	private String ID;
-	private String PASSWORD;
-	private boolean Valid;
 	
-	public Login(Connection conn, String iD, String pASSWORD) {
+	public User(Connection conn, String iD, String pASSWORD) {
 		super();
 		this.conn = conn;
-		ID = iD;
-		PASSWORD = pASSWORD;
-		Valid = isCorrect();
+		ID = Login(iD, pASSWORD);
 	}
-
-	public String getID() {
-		return ID;
-	}
-
-	public String getPASSWORD() {
-		return PASSWORD;
-	}
-
-	public boolean isValid() {
-		return Valid;
-	}
-
-	private boolean isCorrect() {
-
-		boolean result = false;
+	
+	private String Login(String iD, String pASSWORD) {
+		
+		String result = null;
 		PreparedStatement pstmt = null; 
 		ResultSet rs = null;
-
+		
 		String sql = ""; // an SQL statement
-
+		
 		sql = "SELECT * from PJUSER where pjuserid=? and password=?"; //작은 따옴표여야 함
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, ID);
-			pstmt.setString(2, PASSWORD);
+			pstmt.setString(1, iD);
+			pstmt.setString(2, pASSWORD);
 			rs = pstmt.executeQuery();
 			if(rs.next()){
-				result = true;
+				result = iD;
 			}
 			rs.close();
 			pstmt.close();	
@@ -55,5 +39,12 @@ public class Login {
 		}
 		return result;
 	}
+
+	public String getID() {
+		return ID;
+	}
+
+	
+	
 	
 }
