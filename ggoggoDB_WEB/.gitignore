@@ -1,1 +1,8 @@
 /build/
+.settings/
+*.classpath
+*.project
+*.class
+/src/
+!*.java
+!*.jsp
