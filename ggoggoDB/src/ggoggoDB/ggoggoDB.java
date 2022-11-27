@@ -141,12 +141,13 @@ public class InterestedGenresSetting {
 		String genre = "start";
 		int gID = -1;
 		
-		while (true) {
-			System.out.println("********* 2 선호장르 변경 *********");
-			
-			// 1. 선호 장르 보여주기
-			System.out.println("다음은 당신의 선호 장르입니다.");
-			show_interested_genre(conn, info ,false);
+		/* 2. 장르 설정*/
+		if (login.isVaild()) {
+			System.out.println("로그인 성공");
+			InterestedGenresSetting.edit_interested_genre(conn, login, scan);
+
+			OpenBoard openboard = new OpenBoard(conn);
+			MyPage mypage = new MyPage(conn, login.getID());
 
 			// 2. 비선호 장르 보여주기
 			System.out.println("다음은 당신의 비선호 장르입니다.");
@@ -171,9 +172,10 @@ public class InterestedGenresSetting {
 				gID = genre_name_to_id(conn, genre);
 			}
 			
-			if(genre.equals("end")){
-				break;
-			}
+		}else {
+			System.out.println("로그인 실패");
+		}
+		System.out.println("프로그램 종료");
 
 			// 5. 해당 tuple이 있다면 table에서 삭제하고, 없다면 삽입한다. 
 			String userID = info.getID();
