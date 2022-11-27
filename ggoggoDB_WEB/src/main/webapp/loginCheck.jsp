@@ -3,9 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
-
 User user = null;
-session.setAttribute("user", user);
 %>
 <!DOCTYPE html>
 <html>
@@ -20,6 +18,7 @@ session.setAttribute("user", user);
 		String pw = request.getParameter("user_pw");
 		JdbcConnect jdbc = (JdbcConnect)session.getAttribute("jdbc");
 		user = new User(jdbc.getConn(),id,pw);
+		session.setAttribute("user", user);
 		if(user.getID() != null){
 			response.sendRedirect("settingInterestedGenre.jsp");
 		}else{
