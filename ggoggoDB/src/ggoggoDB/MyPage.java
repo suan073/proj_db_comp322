@@ -78,7 +78,8 @@ class MyPage {
 	List<String> getFollowing(Connection conn) {
 		List<String> following = new ArrayList<String>();
 		try {
-			String sql = "select pjuserid from follow where followerid=?";
+			String sql = "select pjuserid\r\n" + "from follow\r\n" + "where followerid=?";
+
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, userid);
 			ResultSet rs = ps.executeQuery();
@@ -128,7 +129,8 @@ class MyPage {
 					ps.setString(2, userid);
 
 					int res = ps.executeUpdate();
-					if (res == 1) {
+
+					if (res == 1){
 						System.out.println("비밀번호가 변경되었습니다.");
 						conn.commit();
 					}
