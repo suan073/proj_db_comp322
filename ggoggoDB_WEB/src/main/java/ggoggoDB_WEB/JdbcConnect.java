@@ -11,7 +11,7 @@ public class JdbcConnect {
 //	private static final String USER_PASSWD ="comp322";
 	
 	private static final String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
-	private static final String USER_DBPROJ = "dbproject";
+	private static final String USER_UNIVERSITY = "dbproject";
 	private static final String USER_PASSWD = "db";
 	
 	private Connection conn;
