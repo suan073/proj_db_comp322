@@ -7,12 +7,15 @@ import java.sql.SQLException;
 
 public class User {
 	final private Connection conn;
-	private String ID;
+	final private String ID;
+	final private InterestedGenre iGenre;
+	
 	
 	public User(Connection conn, String iD, String pASSWORD) {
 		super();
 		this.conn = conn;
 		ID = Login(iD, pASSWORD);
+		iGenre = new InterestedGenre(conn, iD);
 	}
 	
 	private String Login(String iD, String pASSWORD) {
@@ -44,7 +47,12 @@ public class User {
 		return ID;
 	}
 
-	
-	
+	public Connection getConn() {
+		return conn;
+	}
+
+	public InterestedGenre getiGenre() {
+		return iGenre;
+	}
 	
 }

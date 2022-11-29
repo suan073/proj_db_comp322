@@ -6,13 +6,13 @@ import java.sql.SQLException;
 
 public class JdbcConnect {
 	
-//	private static final String URL = "jdbc:oracle:thin:@localhost:1521:xe";
-//	private static final String USER_UNIVERSITY ="ggoggoDB";
-//	private static final String USER_PASSWD ="comp322";
+	private static final String URL = "jdbc:oracle:thin:@localhost:1521:xe";
+	private static final String USER_UNIVERSITY ="ggoggoDB";
+	private static final String USER_PASSWD ="comp322";
 	
-	private static final String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
-	private static final String USER_DBPROJ = "dbproject";
-	private static final String USER_PASSWD = "db";
+//	private static final String URL = "jdbc:oracle:thin:@localhost:1521:orcl";
+//	private static final String USER_DBPROJ = "dbproject";
+//	private static final String USER_PASSWD = "db";
 	
 	private Connection conn;
 	private boolean connected;

@@ -1,4 +1,4 @@
-<%@ page import="ggoggoDB_WEB.JdbcConnect"%>
+<%@ page import="ggoggoDB_WEB.*"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
