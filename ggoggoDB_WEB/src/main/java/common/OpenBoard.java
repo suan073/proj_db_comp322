@@ -123,8 +123,8 @@ public class OpenBoard {
 	}
 	
 	// new method in Ph4
-	public Log[] allBoard(Connection conn) {
-		Log[] logs = new Log[30];
+	public List<Log> allBoard(Connection conn) {
+		List<Log> logs = new ArrayList<Log>();
 		try {
 			int logNum = 0;
 			Statement stmt = conn.createStatement();
@@ -132,7 +132,7 @@ public class OpenBoard {
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next() && logNum < 30) {
 				Log log = new Log(rs);
-				logs[logNum++] = log;
+				logs.add(log);
 			}
 			stmt.close();
 			rs.close();

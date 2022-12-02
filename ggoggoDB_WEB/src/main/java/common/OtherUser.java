@@ -1,38 +1,62 @@
 package common;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
-class OtherUser {
+public class OtherUser {
 	String oUserId;
 
-	OtherUser(String userid) {
+	public OtherUser(String userid) {
 		this.oUserId = userid;
 	}
 
-	boolean showUserLog(Connection conn) {
+	// new method in Ph4
+	public List<Log> showUserLog(Connection conn) {
+		List<Log> logs = new ArrayList<Log>();
 		try {
-			int logNum = 0;
-
 			String sql = "select * from pjlog where writerid=? and pjpublic='Y' order by pjlogdate desc";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, oUserId);
 			ResultSet rs = ps.executeQuery();
 			
-			while (rs.next() && logNum < 30) {
-				logNum++;
+			while (rs.next()) {
+				Log log = new Log(rs);
+				logs.add(log);
 			}
-			if (logNum == 0)
-				System.out.println("No Log ...\n");
-			
 			ps.close();
 			rs.close();
-
 		} catch (SQLException ex2) {
 			System.err.println("sql error = " + ex2.getMessage());
 			System.exit(1);
 		}
-		return true;
+		return logs;
 	}
+
+//	boolean showUserLog(Connection conn) {
+//		try {
+//			int logNum = 0;
+//
+//			String sql = "select * from pjlog where writerid=? and pjpublic='Y' order by pjlogdate desc";
+//			PreparedStatement ps = conn.prepareStatement(sql);
+//			ps.setString(1, oUserId);
+//			ResultSet rs = ps.executeQuery();
+//
+//			while (rs.next() && logNum < 30) {
+//				logNum++;
+//			}
+//			if (logNum == 0)
+//				System.out.println("No Log ...\n");
+//
+//			ps.close();
+//			rs.close();
+//
+//		} catch (SQLException ex2) {
+//			System.err.println("sql error = " + ex2.getMessage());
+//			System.exit(1);
+//		}
+//		return true;
+//	}
 
 	boolean unfollow(Connection conn, String myId) {
 		try {
@@ -50,7 +74,7 @@ class OtherUser {
 				System.out.println("오류!");
 				return false;
 			}
-			
+
 			ps.close();
 
 		} catch (SQLException ex2) {
