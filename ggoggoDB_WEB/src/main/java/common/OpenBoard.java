@@ -8,9 +8,13 @@ import java.util.Scanner;
 
 public class OpenBoard {
 	int logNum;
+	String userId;
+	Connection conn;
 
-	public OpenBoard(Connection conn) {
+	public OpenBoard(Connection conn, String userId) {
 		logNum = 0;
+		this.conn = conn;
+		this.userId = userId;
 		try {
 			Statement stmt = conn.createStatement();
 			String sql = "select * from pjlog";
@@ -88,31 +92,31 @@ public class OpenBoard {
 					if (input.equals("n"))
 						break;
 					int targetLog = Integer.parseInt(input);
-					if (!inlogs(targetLog, logs))
-						System.out.println("잘못된 입력입니다.");
-					else {
-						while (true) {
-							int cNum = showLogComments(conn, targetLog);
-							System.out.print("댓글을 작성하시겠습니까? (y/n): ");
-							choice = scanner.nextLine();
-
-							if (choice.equals("y")) {
-								System.out.print("작성할 댓글을 입력하세요: ");
-								String comment = scanner.nextLine();
-								writeComment(conn, cNum, comment, myUserId, targetLog);
-							} else if (choice.equals("n")) {
-								System.out.println("이전으로 돌아갑니다.");
-								break;
-							} else {
-								System.out.println("잘못된 입력입니다.");
-							}
-						}
-						break;
-					}
+//					if (!inlogs(targetLog, logs))
+//						System.out.println("잘못된 입력입니다.");
+//					else {
+//						while (true) {
+//							int cNum = showLogComments(conn, targetLog);
+//							System.out.print("댓글을 작성하시겠습니까? (y/n): ");
+//							choice = scanner.nextLine();
+//
+//							if (choice.equals("y")) {
+//								System.out.print("작성할 댓글을 입력하세요: ");
+//								String comment = scanner.nextLine();
+//								writeComment(conn, cNum, comment, myUserId, targetLog);
+//							} else if (choice.equals("n")) {
+//								System.out.println("이전으로 돌아갑니다.");
+//								break;
+//							} else {
+//								System.out.println("잘못된 입력입니다.");
+//							}
+//						}
+//						break;
+//					}
 				}
 
 			} else if (choice.equals("3")) {
-				//writeLog(conn, scanner, myUserId);
+				// writeLog(conn, scanner, myUserId);
 			} else if (choice.equals("0")) {
 				break;
 			} else {
@@ -121,7 +125,7 @@ public class OpenBoard {
 			}
 		}
 	}
-	
+
 	// new method in Ph4
 	public List<Log> allBoard(Connection conn) {
 		List<Log> logs = new ArrayList<Log>();
@@ -180,14 +184,6 @@ public class OpenBoard {
 			System.exit(1);
 		}
 		return logs;
-	}
-
-	boolean inlogs(int targetLog, int[] logs) {
-		for (int log : logs) {
-			if (targetLog == log)
-				return true;
-		}
-		return false;
 	}
 
 	int showLogComments(Connection conn, int logid) {
@@ -264,67 +260,34 @@ public class OpenBoard {
 		}
 	}
 
-//	void writeLog(Connection conn, Scanner scanner, String userid) {
-//		try {
-//			java.sql.Date today = new java.sql.Date(System.currentTimeMillis());
-//			String sql = "insert into pjlog values (?, ?, ?, ?, ?, ?, ?, ?)";
-//			PreparedStatement ps = conn.prepareStatement(sql);
-//
-//			String input;
-//
-//			System.out.print("제목을 입력하세요: ");
-//			input = scanner.nextLine();
-//			ps.setString(2, input);
-//
-//			while (true) {
-//				System.out.print("작품에 대한 글 작성을 원하시나요(y/n): ");
-//				input = scanner.nextLine();
-//				if (input.equals("n")) {
-//					ps.setString(8, null);
-//					break;
-//				} else if (input.equals("y")) {
-//					Searching s = new Searching();
-//					String wssn = s.search2(conn, scanner);
-//					ps.setString(8, wssn);
-//					break;
-//				} else
-//					System.out.println("잘못된 입력입니다.");
-//			}
-//
-//			while (true) {
-//				System.out.print("공개여부를 설정하세요(y/n): ");
-//				input = scanner.nextLine();
-//				if (input.equals("n") || input.equals("y")) {
-//					ps.setString(3, input.toUpperCase());
-//					break;
-//				} else {
-//					System.out.println("잘못된 입력입니다.");
-//				}
-//			}
-//
-//			System.out.print("글 내용을 입력하세요: ");
-//			input = scanner.nextLine();
-//			ps.setString(5, input);
-//
-//			ps.setInt(1, logNum++);
-//			ps.setInt(4, 0);
-//			ps.setDate(6, today);
-//			ps.setString(7, userid);
-//
-//			int res = ps.executeUpdate();
-//			if (res == 1) {
-//				System.out.println("글이 작성되었습니다.");
-//				conn.commit();
-//
-//			} else {
-//				System.out.println("오류!");
-//			}
-//			ps.close();
-//		} catch (SQLException ex2) {
-//			System.err.println("sql error = " + ex2.getMessage());
-//			System.exit(1);
-//		}
-//	}
+	// New method in Ph4
+	public void writeLog(String title, String content, String ispublic) {
+		try {
+			java.sql.Date today = new java.sql.Date(System.currentTimeMillis());
+			String sql = "insert into pjlog values (?, ?, ?, ?, ?, ?, ?, ?)";
+			PreparedStatement ps = conn.prepareStatement(sql);
 
+			ps.setInt(1, logNum++);
+			ps.setString(2, title);
+			ps.setString(3, ispublic);
+			ps.setInt(4, 0);
+			ps.setString(5, content);
+			ps.setDate(6, today);
+			ps.setString(7, userId);
+			ps.setString(8, null);
+			
+			int res = ps.executeUpdate();
+			if (res == 1) {
+				System.out.println("글이 작성되었습니다.");
+				conn.commit();
+			} else {
+				System.out.println("오류!");
+			}
+
+			ps.close();
+		} catch (SQLException ex2) {
+			System.err.println("sql error = " + ex2.getMessage());
+			System.exit(1);
+		}
+	}
 }
-

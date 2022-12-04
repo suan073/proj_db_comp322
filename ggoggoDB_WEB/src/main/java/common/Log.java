@@ -38,6 +38,8 @@ public class Log {
 	public int getCommentNum() {
 		return commentNum;
 	}
+	
+	Log(){}
 
 	Log(ResultSet rs){
 		try {

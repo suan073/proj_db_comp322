@@ -6,8 +6,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%
-JdbcConnect jdbc = new JdbcConnect();
-session.setAttribute("jdbc", jdbc);
 %>
 <!DOCTYPE html>
 <html>
@@ -17,6 +15,7 @@ session.setAttribute("jdbc", jdbc);
 </head>
 <body>
 	<%
+	JdbcConnect jdbc = (JdbcConnect) session.getAttribute("jdbc");
 	String oUserId = request.getParameter("oUserId");
 	OtherUser oUser = new OtherUser(oUserId);
 	out.print("<h2>" + oUserId + "<button type=\"button\">follow</button> </h2>");

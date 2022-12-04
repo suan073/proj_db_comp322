@@ -8,6 +8,10 @@
 <%
 JdbcConnect jdbc = new JdbcConnect();
 session.setAttribute("jdbc", jdbc);
+String userId = "XoOoOong";
+session.setAttribute("userId", userId);
+OpenBoard openboard = new OpenBoard(jdbc.getConn(), userId);
+session.setAttribute("openboard", openboard);
 %>
 <!DOCTYPE html>
 <html>
@@ -16,11 +20,11 @@ session.setAttribute("jdbc", jdbc);
 <title>OpenBoard</title>
 </head>
 <body>
-	<h2>게시판</h2>
 	<%
-	//JdbcConnect jdbc = (JdbcConnect) session.getAttribute("jdbc");
-	OpenBoard openboard = new OpenBoard(jdbc.getConn());
 	List<Log> logs = openboard.allBoard(jdbc.getConn());
+	
+	out.print("<h2>게시판<button onclick=\"location='writeLog.jsp'\">write</button> </h2>");
+	
 	for(Log e : logs){
 		out.print("<form action=\"otherUserLog.jsp\" method=\"post\">");
 		out.print("<button type=\"submit\" name=\"oUserId\" value=\"" + e.getWriterid() + "\">" + e.getWriterid() + "</button><br>");

@@ -33,31 +33,6 @@ public class OtherUser {
 		return logs;
 	}
 
-//	boolean showUserLog(Connection conn) {
-//		try {
-//			int logNum = 0;
-//
-//			String sql = "select * from pjlog where writerid=? and pjpublic='Y' order by pjlogdate desc";
-//			PreparedStatement ps = conn.prepareStatement(sql);
-//			ps.setString(1, oUserId);
-//			ResultSet rs = ps.executeQuery();
-//
-//			while (rs.next() && logNum < 30) {
-//				logNum++;
-//			}
-//			if (logNum == 0)
-//				System.out.println("No Log ...\n");
-//
-//			ps.close();
-//			rs.close();
-//
-//		} catch (SQLException ex2) {
-//			System.err.println("sql error = " + ex2.getMessage());
-//			System.exit(1);
-//		}
-//		return true;
-//	}
-
 	boolean unfollow(Connection conn, String myId) {
 		try {
 			String sql = "delete from follow where pjuserid=? and followerid=?";
