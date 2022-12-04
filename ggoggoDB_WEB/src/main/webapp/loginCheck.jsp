@@ -1,4 +1,4 @@
-<%@ page import="ggoggoDB_WEB.*"%>
+<%@ page import="common.*"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -16,7 +16,7 @@
 	session.setAttribute("user", user);
 	
 	if(user.getID() != null){
-		response.sendRedirect("settingInterestedGenre.jsp");
+		response.sendRedirect("settingIG.jsp");
 	}else{
 		request.getRequestDispatcher("login.jsp?loginErr=1").forward(request, response);
 	}

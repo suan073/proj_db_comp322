@@ -1,5 +1,6 @@
 <%@page import="java.util.ArrayList"%>
-<%@page import="ggoggoDB_WEB.*"%>
+<%@page import="common.*"%>
+<%@page import="IG.*"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -11,7 +12,7 @@
 <body>
 	<h1>당신의 선호 장르는 무엇입니까?</h1>
 	<form action="settingIGcheck.jsp" method="post">
-	<table width=1000 align="center" border=1>
+	<table border=1>
 	<%
 		User user = (User)session.getAttribute("user");
 		InterestedGenre IGenre = user.getiGenre();

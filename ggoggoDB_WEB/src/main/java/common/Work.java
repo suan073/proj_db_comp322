@@ -1,4 +1,4 @@
-package ggoggoDB_WEB;
+package common;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

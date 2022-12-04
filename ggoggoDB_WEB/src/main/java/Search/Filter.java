@@ -1,4 +1,4 @@
-package ggoggoDB_WEB;
+package Search;
 
 import java.util.ArrayList;
 

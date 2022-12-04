@@ -1,10 +1,12 @@
-package ggoggoDB_WEB;
+package Search;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import common.Work;
 
 
 public class Searcher {
@@ -64,7 +66,6 @@ public class Searcher {
 			pstmt = conn.prepareStatement(sql.toString());
             rs = pstmt.executeQuery();
 
-            int cnt = 0;
             while(rs.next()){
                 String workTitle = rs.getString(2);
                 switch(category){
@@ -79,7 +80,6 @@ public class Searcher {
                 }
                 result.add(workTitle);
                 result.add(rs.getString(1));
-                cnt++;
             }
 
 		} catch (SQLException e) {
