@@ -34,8 +34,9 @@
 	out.print("</form>");		
 	out.print(e.getTitle() + "\t" + e.getDate() + "<br>");
 	out.print(e.getContents() + "<br>");
-	out.print("<button type=\"submit\" onclick=\"location='logComment.jsp'\" name=\"logId\" value=e.getLogid()>댓글</button>" + e.getCommentNum() + "<button type=\"button\">♡</button>" + e.getLikes() + "<br>");
-	out.print("--------------------------------------------------</h4>");
+	out.print("<form action=\"logComment.jsp\" method=\"post\">");
+	out.print("<button type=\"submit\" name=\"logId\" value=\"" + e.getLogid() + "\">댓글</button>" + e.getCommentNum() + "<button type=\"button\">♡</button>" + e.getLikes() + "<br>");
+	out.print("</form>--------------------------------------------------</h4>");
 	
 	List<Comment> comments = e.showComments(jdbc.getConn());
 	for(Comment c : comments){

@@ -21,9 +21,21 @@ session.setAttribute("openboard", openboard);
 </head>
 <body>
 	<%
-	List<Log> logs = openboard.allBoard();
+	List<Log> logs;
+	String x= request.getParameter("searchLog");
 	
 	out.print("<h2>게시판<button onclick=\"location='writeLog.jsp'\">write</button> </h2>");
+	out.print("<form method=\"post\">");
+	out.print("<h3>검색어: <input type=\"text\" name=\"search\" required value=\"\">");
+	out.print("<button type=\"submit\" name=\"searchLog\" value=\"doSearch\">검색</button>");
+	out.print("<h3></form>");
+	
+	if(x != null && x.equals("doSearch")){
+		logs = openboard.searchLog(request.getParameter("search"));
+		out.print("<h3>" + request.getParameter("search") + " 검색 결과 <button type=\"button\" onclick=\"location='openBoard.jsp'\">게시판 돌아가기</button></h3>");
+	} else{
+		logs = openboard.allBoard();
+	}
 	
 	for(Log e : logs){
 		out.print("<form action=\"otherUserLog.jsp\" method=\"post\">");

@@ -30,80 +30,15 @@ public class OpenBoard {
 		}
 	}
 
-	void executeOpenBoard(Connection conn, Scanner scanner, String myUserId) {
-		while (true) {
-			String choice;
-
-			System.out.println();
-			System.out.println("*** 게시판 ***");
-			System.out.println("1. 전체 게시판 보기");
-			System.out.println("2. 게시글 검색하기");
-			System.out.println("3. 게시글 작성하기");
-			System.out.println("0. 돌아가기");
-
-			choice = scanner.nextLine();
-
-			if (choice.equals("1")) {
-			} else if (choice.equals("2")) {
-				while (true) {
-					System.out.print("게시글 검색: ");
-					String search = scanner.nextLine();
-
-					int logs[] = searchLog(conn, search);
-
-					if (logs[0] == -1)
-						continue;
-					System.out.println("자세히 보고 싶은 글의 글번호를 입력하세요");
-					System.out.print("뒤로 가려면 'n'을 입력하세요: ");
-					String input = scanner.nextLine();
-
-					if (input.equals("n"))
-						break;
-					int targetLog = Integer.parseInt(input);
-//					if (!inlogs(targetLog, logs))
-//						System.out.println("잘못된 입력입니다.");
-//					else {
-//						while (true) {
-//							int cNum = showLogComments(conn, targetLog);
-//							System.out.print("댓글을 작성하시겠습니까? (y/n): ");
-//							choice = scanner.nextLine();
-//
-//							if (choice.equals("y")) {
-//								System.out.print("작성할 댓글을 입력하세요: ");
-//								String comment = scanner.nextLine();
-//								writeComment(conn, cNum, comment, myUserId, targetLog);
-//							} else if (choice.equals("n")) {
-//								System.out.println("이전으로 돌아갑니다.");
-//								break;
-//							} else {
-//								System.out.println("잘못된 입력입니다.");
-//							}
-//						}
-//						break;
-//					}
-				}
-
-			} else if (choice.equals("3")) {
-				// writeLog(conn, scanner, myUserId);
-			} else if (choice.equals("0")) {
-				break;
-			} else {
-				System.out.println("잘못된 입력입니다.\n");
-				continue;
-			}
-		}
-	}
-
 	// new method in Ph4
 	public List<Log> allBoard() {
 		List<Log> logs = new ArrayList<Log>();
 		try {
 			int logNum = 0;
 			Statement stmt = conn.createStatement();
-			String sql = "select * from pjlog, (select targetposting, count (*) as commentnum\r\n"
-					+ "from pjcomment group by targetposting)\r\n"
-					+ "where pjpublic='Y' and pjlogid=targetposting\r\n"
-					+ "order by pjlogdate desc";
+			String sql = "select * from pjlog left outer join (select targetposting, count (*) as commentnum\r\n"
+					+ "from pjcomment group by targetposting) on pjlogid=targetposting\r\n"
+					+ "where pjpublic='Y' order by pjlogdate desc";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next() && logNum < 30) {
 				Log log = new Log(rs);
@@ -118,36 +53,23 @@ public class OpenBoard {
 		return logs;
 	}
 
-	int[] searchLog(Connection conn, String search) {
-		int[] logs = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+	public List<Log> searchLog(String search) {
+		List<Log> logs = new ArrayList<Log>();
 		try {
 			int logNum = 0;
-			String sql = "select pjlogid, writerid, pjlogdate, pjlogtitle, pjcontents from pjlog\r\n"
+			String sql = "select * from pjlog left outer join (select targetposting, count (*) as commentnum\r\n"
+					+ "from pjcomment group by targetposting) on pjlogid=targetposting\r\n"
 					+ "where pjpublic='Y' and (pjlogtitle like ? or pjcontents like ? or writerid like ?) order by pjlogdate desc";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, "%" + search + "%");
 			ps.setString(2, "%" + search + "%");
 			ps.setString(3, "%" + search + "%");
 			ResultSet rs = ps.executeQuery();
-			System.out.println();
-			System.out.println("'" + search + "' 검색 결과");
-			System.out.println("--------------------");
-
-			while (rs.next() && logNum < 10) {
-				int logid = rs.getInt(1);
-				logs[logNum] = logid;
-				String writerID = rs.getString(2);
-				Date date = rs.getDate(3);
-				String title = rs.getString(4);
-				String contents = rs.getString(5);
-				System.out.println("글번호 #" + logid + "  제목: " + title);
-				System.out.println("작성자:" + writerID + "\t    " + date);
-				System.out.println(contents);
-				System.out.println();
-				logNum++;
+			
+			while (rs.next() && logNum < 30) {
+				Log log = new Log(rs);
+				logs.add(log);
 			}
-			if (logNum == 0)
-				System.out.println("검색 결과가 없습니다 ...\n");
 			ps.close();
 			rs.close();
 		} catch (SQLException ex2) {
