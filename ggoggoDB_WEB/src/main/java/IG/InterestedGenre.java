@@ -62,7 +62,6 @@ public class InterestedGenre {
 	}
 	
 	public int size() {
-		System.out.println(listOfIG.size());
 		return listOfIG.size();
 	}
 	
@@ -74,13 +73,18 @@ public class InterestedGenre {
 		for (int i = 0; i <size(); i++) {
 			if(getItemOfIG(i).isDirty()) {
 				update(i);
-				//commit해야함.
 			}
+		}
+		try {
+			conn.commit();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		resetListOfIGs();
 	}
 	
-	public void update(int index) {
+	private void update(int index) {
 		ItemOfIG curIg = listOfIG.get(index);
 		PreparedStatement pstmt = null; 
 		String sql = "";

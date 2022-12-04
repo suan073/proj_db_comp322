@@ -1,13 +1,38 @@
 package Search;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 
-public class Filter {
+public class FilterForSearch {
+
     private ArrayList<String> language;
     private ArrayList<String> isAdult; 
     private ArrayList<String> media; 
     private ArrayList<String> status; 
+
+	public static ArrayList<String> getFilterExample (Connection conn, String filter_name){
+		ArrayList<String> reArrayList = new ArrayList<>();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        String sql = "Select distinct " + filter_name + " from WORK";
+        try {
+        
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            while(rs.next()) {
+                String item = rs.getString(1);
+                reArrayList.add(item);            
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return reArrayList;
+    }
 
 	public ArrayList<String> getLanguage() {
 		return language;

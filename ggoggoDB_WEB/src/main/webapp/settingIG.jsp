@@ -17,17 +17,17 @@
 		User user = (User)session.getAttribute("user");
 		InterestedGenre IGenre = user.getiGenre();
 		
-		for(int j = 0; j<IGenre.size(); ){
+		for(int index = 0; index<IGenre.size(); ){
 			out.print("<tr>");
 			for(int i = 0; i<5 ;i++){
-				if(j<IGenre.size()){
-					ItemOfIG item = IGenre.getItemOfIG(j);
-					out.print("<td width=200 height=50> <label><input type=\"checkbox\" value="+j+" name=\"IGcheckbox\"");
+				if(index<IGenre.size()){
+					ItemOfIG item = IGenre.getItemOfIG(index);
+					out.print("<td width=200 height=50> <label><input type=\"checkbox\" value="+index+" name=\"IGcheckbox\"");
 					if(item.isInterest()){
 						out.print(" checked ");
 					}
-					out.print(">"+item.getGenreName()+"</label> </td>");
-					j++;
+					out.print(">"+index+". "+item.getGenreName()+"</label> </td>");
+					index++;
 				}
 				else if (i<4) {
 					out.print("<td></td>");
