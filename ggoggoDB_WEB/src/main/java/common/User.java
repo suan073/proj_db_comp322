@@ -1,9 +1,11 @@
-package ggoggoDB_WEB;
+package common;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import IG.InterestedGenre;
 
 public class User {
 	final private Connection conn;

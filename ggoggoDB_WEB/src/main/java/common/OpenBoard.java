@@ -1,4 +1,4 @@
-package ggoggoDB_WEB;
+package common;
 
 import java.sql.*; // import JDBC package
 import java.util.ArrayList;

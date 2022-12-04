@@ -1,4 +1,4 @@
-package ggoggoDB_WEB;
+package IG;
 
 public class ItemOfIG implements Comparable<ItemOfIG>{
 	

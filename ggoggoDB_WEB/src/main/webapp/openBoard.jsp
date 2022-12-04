@@ -1,6 +1,6 @@
-<%@ page import="ggoggoDB_WEB.JdbcConnect"%>
-<%@ page import="ggoggoDB_WEB.OpenBoard"%>
-<%@ page import="ggoggoDB_WEB.Log"%>
+<%@ page import="common.JdbcConnect"%>
+<%@ page import="common.OpenBoard"%>
+<%@ page import="common.Log"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%
