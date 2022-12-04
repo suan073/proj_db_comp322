@@ -88,7 +88,7 @@ public class Log {
 			ps.setInt(1, logid);
 			ResultSet rs = ps.executeQuery();
 			commentNum = 0;
-			if (rs.next())
+			while (rs.next())
 				commentNum++;
 			ps.close();
 			rs.close();
@@ -124,6 +124,7 @@ public class Log {
 			java.sql.Date today = new java.sql.Date(System.currentTimeMillis());
 			String sql = "insert into pjcomment values (?, ?, ?, ?, ?)";
 			PreparedStatement ps = conn.prepareStatement(sql);
+			System.out.println(commentNum);
 			ps.setInt(1, commentNum++);
 			ps.setString(2, text);
 			ps.setDate(3, today);
