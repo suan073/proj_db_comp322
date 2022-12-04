@@ -9,11 +9,10 @@
 <title>save new log</title>
 </head>
 <body>
-<%
-OpenBoard openboard = (OpenBoard)session.getAttribute("openboard");
-openboard.writeLog(request.getParameter("title"), request.getParameter("content"), request.getParameter("public"));
-
+	<%
+	OpenBoard openboard = (OpenBoard) session.getAttribute("openboard");
+	openboard.writeLog(request.getParameter("title"), request.getParameter("content"), request.getParameter("public"));
 	response.sendRedirect("openBoard.jsp");
-%>
+	%>
 </body>
 </html>

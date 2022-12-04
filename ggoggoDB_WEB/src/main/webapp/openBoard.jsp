@@ -31,7 +31,7 @@ session.setAttribute("openboard", openboard);
 		out.print("</form>");		
 		out.print(e.getTitle() + "\t" + e.getDate() + "<br>");
 		out.print(e.getContents() + "<br>");
-		out.print("<button type=\"button\">댓글</button>" + "<button type=\"button\">♡</button>" + e.getLikes() + "<br>");
+		out.print("<button type=\"button\" onclick=\"location='logComment.jsp'\">댓글</button>" + "<button type=\"button\">♡</button>" + e.getLikes() + "<br>");
 		out.print("--------------------------------------------------<br>");
 	}
 	%>
