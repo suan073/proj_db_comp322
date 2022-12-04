@@ -1,5 +1,5 @@
 <%@ page import="common.JdbcConnect"%>
-<%@ page import="common.OpenBoard"%>
+<%@ page import="common.OtherUser"%>
 <%@ page import="common.Log"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.ArrayList"%>

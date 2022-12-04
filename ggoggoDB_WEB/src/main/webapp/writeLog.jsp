@@ -1,4 +1,4 @@
-<%@ page import="ggoggoDB_WEB.OpenBoard"%>
+<%@ page import="common.OpenBoard"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>

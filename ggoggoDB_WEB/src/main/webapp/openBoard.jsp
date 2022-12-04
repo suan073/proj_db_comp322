@@ -21,7 +21,7 @@ session.setAttribute("openboard", openboard);
 </head>
 <body>
 	<%
-	List<Log> logs = openboard.allBoard(jdbc.getConn());
+	List<Log> logs = openboard.allBoard();
 	
 	out.print("<h2>게시판<button onclick=\"location='writeLog.jsp'\">write</button> </h2>");
 	
@@ -31,8 +31,9 @@ session.setAttribute("openboard", openboard);
 		out.print("</form>");		
 		out.print(e.getTitle() + "\t" + e.getDate() + "<br>");
 		out.print(e.getContents() + "<br>");
-		out.print("<button type=\"button\" onclick=\"location='logComment.jsp'\">댓글</button>" + "<button type=\"button\">♡</button>" + e.getLikes() + "<br>");
-		out.print("--------------------------------------------------<br>");
+		out.print("<form action=\"logComment.jsp\" method=\"post\">");
+		out.print("<button type=\"submit\" name=\"logId\" value=\"" + e.getLogid() + "\">댓글</button>" + e.getCommentNum() + "<button type=\"button\">♡</button>" + e.getLikes() + "<br>");
+		out.print("</form>--------------------------------------------------<br>");
 	}
 	%>
 </body>

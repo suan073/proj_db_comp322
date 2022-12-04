@@ -127,12 +127,15 @@ public class OpenBoard {
 	}
 
 	// new method in Ph4
-	public List<Log> allBoard(Connection conn) {
+	public List<Log> allBoard() {
 		List<Log> logs = new ArrayList<Log>();
 		try {
 			int logNum = 0;
 			Statement stmt = conn.createStatement();
-			String sql = "select * from pjlog where pjpublic='Y' order by pjlogdate desc";
+			String sql = "select * from pjlog, (select targetposting, count (*) as commentnum\r\n"
+					+ "from pjcomment group by targetposting)\r\n"
+					+ "where pjpublic='Y' and pjlogid=targetposting\r\n"
+					+ "order by pjlogdate desc";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next() && logNum < 30) {
 				Log log = new Log(rs);
@@ -186,79 +189,79 @@ public class OpenBoard {
 		return logs;
 	}
 
-	int showLogComments(Connection conn, int logid) {
-		int commentNum = 0;
-		try {
-			String sql = "select writerid, pjlogdate, pjlogtitle, pjcontents from pjlog where pjlogid=?";
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(1, logid);
-			ResultSet rs = ps.executeQuery();
+//	int showLogComments(Connection conn, int logid) {
+//		int commentNum = 0;
+//		try {
+//			String sql = "select writerid, pjlogdate, pjlogtitle, pjcontents from pjlog where pjlogid=?";
+//			PreparedStatement ps = conn.prepareStatement(sql);
+//			ps.setInt(1, logid);
+//			ResultSet rs = ps.executeQuery();
+//
+//			System.out.println();
+//			if (rs.next()) {
+//				String writerID = rs.getString(1);
+//				Date date = rs.getDate(2);
+//				String title = rs.getString(3);
+//				String contents = rs.getString(4);
+//				System.out.println("글번호 #" + logid + "  제목: " + title);
+//				System.out.println("작성자:" + writerID + "\t    " + date);
+//				System.out.println(contents);
+//				System.out.println();
+//			}
+//			System.out.println("--------------------");
+//			System.out.println();
+//
+//			sql = "select writerid, commdate, pjtext from pjcomment where targetposting=? order by commdate asc";
+//			ps = conn.prepareStatement(sql);
+//			ps.setInt(1, logid);
+//			rs = ps.executeQuery();
+//
+//			while (rs.next()) {
+//				commentNum++;
+//				String writerID = rs.getString(1);
+//				Date date = rs.getDate(2);
+//				String text = rs.getString(3);
+//				System.out.println("작성자: " + writerID + "\t" + date);
+//				System.out.println(text);
+//				System.out.println();
+//			}
+//			if (commentNum == 0)
+//				System.out.println("댓글이 없습니다, 댓글을 작성해보세요!");
+//			ps.close();
+//			rs.close();
+//
+//		} catch (SQLException ex2) {
+//			System.err.println("sql error = " + ex2.getMessage());
+//			System.exit(1);
+//		}
+//		return commentNum;
+//	}
 
-			System.out.println();
-			if (rs.next()) {
-				String writerID = rs.getString(1);
-				Date date = rs.getDate(2);
-				String title = rs.getString(3);
-				String contents = rs.getString(4);
-				System.out.println("글번호 #" + logid + "  제목: " + title);
-				System.out.println("작성자:" + writerID + "\t    " + date);
-				System.out.println(contents);
-				System.out.println();
-			}
-			System.out.println("--------------------");
-			System.out.println();
-
-			sql = "select writerid, commdate, pjtext from pjcomment where targetposting=? order by commdate asc";
-			ps = conn.prepareStatement(sql);
-			ps.setInt(1, logid);
-			rs = ps.executeQuery();
-
-			while (rs.next()) {
-				commentNum++;
-				String writerID = rs.getString(1);
-				Date date = rs.getDate(2);
-				String text = rs.getString(3);
-				System.out.println("작성자: " + writerID + "\t" + date);
-				System.out.println(text);
-				System.out.println();
-			}
-			if (commentNum == 0)
-				System.out.println("댓글이 없습니다, 댓글을 작성해보세요!");
-			ps.close();
-			rs.close();
-
-		} catch (SQLException ex2) {
-			System.err.println("sql error = " + ex2.getMessage());
-			System.exit(1);
-		}
-		return commentNum;
-	}
-
-	void writeComment(Connection conn, int cnum, String text, String userid, int logid) {
-		try {
-			java.sql.Date today = new java.sql.Date(System.currentTimeMillis());
-			String sql = "insert into pjcomment values (?, ?, ?, ?, ?)";
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setInt(1, cnum + 1);
-			ps.setString(2, text);
-			ps.setDate(3, today);
-			ps.setString(4, userid);
-			ps.setInt(5, logid);
-
-			int res = ps.executeUpdate();
-			if (res == 1) {
-				System.out.println("댓글이 작성되었습니다.");
-				conn.commit();
-
-			} else {
-				System.out.println("오류!");
-			}
-			ps.close();
-		} catch (SQLException ex2) {
-			System.err.println("sql error = " + ex2.getMessage());
-			System.exit(1);
-		}
-	}
+//	void writeComment(int cnum, String text, int logid) {
+//		try {
+//			java.sql.Date today = new java.sql.Date(System.currentTimeMillis());
+//			String sql = "insert into pjcomment values (?, ?, ?, ?, ?)";
+//			PreparedStatement ps = conn.prepareStatement(sql);
+//			ps.setInt(1, cnum + 1);
+//			ps.setString(2, text);
+//			ps.setDate(3, today);
+//			ps.setString(4, userId);
+//			ps.setInt(5, logid);
+//
+//			int res = ps.executeUpdate();
+//			if (res == 1) {
+//				System.out.println("댓글이 작성되었습니다.");
+//				conn.commit();
+//
+//			} else {
+//				System.out.println("오류!");
+//			}
+//			ps.close();
+//		} catch (SQLException ex2) {
+//			System.err.println("sql error = " + ex2.getMessage());
+//			System.exit(1);
+//		}
+//	}
 
 	// New method in Ph4
 	public void writeLog(String title, String content, String ispublic) {
