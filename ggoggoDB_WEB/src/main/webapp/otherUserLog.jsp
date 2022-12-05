@@ -71,7 +71,7 @@
 		out.print("</td></tr>");
 	}
 	out.print("</table>");
-	List<Log> logs = oUser.showUserLog(jdbc.getConn());
+	List<Log> logs = oUser.showUserLog(jdbc.getConn(), userId);
 
 	out.print("<table border=1 width=\"1000\">");
 	for(Log e : logs){

@@ -11,10 +11,18 @@ public class OtherUser {
 		this.oUserId = userid;
 	}
 
-	public List<Log> showUserLog(Connection conn) {
+	public List<Log> showUserLog(Connection conn, String myId) {
 		List<Log> logs = new ArrayList<Log>();
 		try {
-			String sql = "select * from pjlog where writerid=? and pjpublic='Y' order by pjlogdate desc";
+			String sql = "select * from pjlog  left outer join (select targetposting, count (*) as commentnum\r\n"
+					+ "from pjcomment group by targetposting) on pjlogid=targetposting\r\n"
+					+ "where writerid=? and pjpublic='Y' order by pjlogdate desc";
+			if(myId.equals(oUserId)) {
+				sql = "select * from pjlog  left outer join (select targetposting, count (*) as commentnum\r\n"
+						+ "from pjcomment group by targetposting) on pjlogid=targetposting\r\n"
+						+ "where writerid=? order by pjlogdate desc";
+			}
+			
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, oUserId);
 			ResultSet rs = ps.executeQuery();

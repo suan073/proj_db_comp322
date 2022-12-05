@@ -72,6 +72,7 @@
 	
 	out.print("<br><form method=\"post\">");
 	out.print("댓글: <textarea name=\"text\" required value=\"\">댓글 작성하기..</textarea>"); 
+	out.print("<input type=\"hidden\" name=\"type\" value="+type+">");
 	out.print("<button type=\"submit\" name=\"writeComment\" value=\"" + logId + "\">작성</button>");
 	out.print("</form>");
 	

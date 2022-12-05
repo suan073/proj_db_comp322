@@ -64,7 +64,6 @@ public class TimeLine {
 			while (rs.next() && logNum < 30) {
 				Log log = new Log(rs,conn);
 				logs.add(log);
-				//System.out.print();
 			}
 			pstmt.close();
 			rs.close();
