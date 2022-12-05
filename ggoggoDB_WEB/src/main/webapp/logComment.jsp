@@ -45,6 +45,9 @@
 	case 2:
 		out.print("<h3><button type=\"button\" onclick=\"location='timeLine.jsp'\">타임라인 돌아가기</button></h2>");
 		break;
+	case 3:
+		out.print("<button type=\"button\" onclick=\"location='showFollow.jsp'\">내 팔로잉 목록 돌아가기</button>");
+		break;
 	}
 	
 	out.print("<table border=1 width=\"1000\">");
