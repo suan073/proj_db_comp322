@@ -32,7 +32,7 @@ public class OtherUser {
 		return logs;
 	}
 
-	boolean infollowing(Connection conn, String myId) {
+	public boolean infollowing(Connection conn, String myId) {
 		boolean yn = false;
 		try {
 			String sql = "select * from follow where pjuserid=? and followerid=?";

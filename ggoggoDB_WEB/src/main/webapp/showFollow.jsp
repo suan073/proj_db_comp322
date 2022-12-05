@@ -22,7 +22,6 @@
 	out.print("<h2>내 팔로잉 목록<button type=\"button\" onclick=\"location='myPage.jsp'\">마이페이지 돌아가기</button></h2>");
 	
 	String oUserId= request.getParameter("unfollow");
-	
 	if(oUserId != null){
 		String userId = (String) session.getAttribute("userId");
 		OtherUser oUser = new OtherUser(oUserId);

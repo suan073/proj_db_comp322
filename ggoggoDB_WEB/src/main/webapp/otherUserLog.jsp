@@ -5,8 +5,6 @@
 <%@ page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%
-%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,9 +14,35 @@
 <body>
 	<%
 	JdbcConnect jdbc = (JdbcConnect) session.getAttribute("jdbc");
+	String userId = (String) session.getAttribute("userId");
 	String oUserId = request.getParameter("oUserId");
-	OtherUser oUser = new OtherUser(oUserId);
-	out.print("<h2>" + oUserId + "<button type=\"button\">follow</button><button type=\"button\" onclick=\"location='openBoard.jsp'\">게시판 돌아가기</button></h2>");
+	OtherUser oUser;
+	
+	if(oUserId != null){
+		oUser = new OtherUser(oUserId);
+	}else if(request.getParameter("unfollow") != null){
+		oUserId = request.getParameter("unfollow");
+		oUser = new OtherUser(oUserId);
+		oUser.unfollow(jdbc.getConn(), userId);
+	}else if(request.getParameter("follow") != null){
+		oUserId = request.getParameter("follow");
+		oUser = new OtherUser(oUserId);
+		oUser.follow(jdbc.getConn(), userId);
+	}else{	// error
+		oUser = new OtherUser(null);
+	}
+	
+	out.print("<h2>" + oUserId);
+	out.print("<form method=\"post\">");
+	if(oUserId.equals(userId)){
+		
+	}else if(oUser.infollowing(jdbc.getConn(), userId)){
+		out.print("<button type=\"submit\" name=\"unfollow\" value=\""+oUserId+"\">언팔로우</button></form>");
+	}else{
+		out.print("<button type=\"submit\" name=\"follow\" value=\""+oUserId+"\">팔로우</button></form>");
+	}
+	
+	out.print("<button type=\"button\" onclick=\"location='openBoard.jsp'\">게시판 돌아가기</button></h2>");
 	List<Log> logs = oUser.showUserLog(jdbc.getConn());
 
 	out.print("<table border=1 width=\"1000\">");
