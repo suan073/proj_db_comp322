@@ -11,28 +11,27 @@ import common.Work;
 
 public class Searcher {
 	final private Connection conn;
-	final private Filter filter;
+	final private FilterForSearch filter;
 
-	public Searcher(Connection conn) {
+	public Searcher(Connection conn, 
+			ArrayList<String> lang, ArrayList<String> adult, 
+			ArrayList<String> media, ArrayList<String>status) {
 		super();
 		this.conn = conn;
-		this.filter = new Filter();
-	}
-	
-	public void setFilter(ArrayList<String> lang, ArrayList<String> adult, 
-			ArrayList<String> media, ArrayList<String>status) {
+		this.filter = new FilterForSearch();
+
 		filter.setLanguage(lang);
 		filter.setIsAdult(adult);
 		filter.setMedia(media);
 		filter.setStatus(status);
 	}
 	
-	public ArrayList<String> getSearchResult(String category, String search_word) { 
+	public ArrayList<ResultItem> getSearchResult(String category, String search_word) { 
 		//짝수자리 제목, 홀수자리 ssn
 		StringBuffer sql = new StringBuffer();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        ArrayList<String> result = new ArrayList<>();
+        ArrayList<ResultItem> result = new ArrayList<>();
 
         sql.append("select W.ssn, Worktitle, sumoflikes ");
         switch(category){
@@ -62,6 +61,7 @@ public class Searcher {
         sql.append("%' ");
         sql.append(") W, (select Writeabout, sum(likes) as sumoflikes from pjlog ");
         sql.append("group by Writeabout) O where W.ssn = O.Writeabout order by sumoflikes desc ");
+        System.out.println(sql.toString());
         try {
 			pstmt = conn.prepareStatement(sql.toString());
             rs = pstmt.executeQuery();
@@ -78,8 +78,7 @@ public class Searcher {
                         workTitle = rs.getString(4) + " - " + workTitle;
                         break;
                 }
-                result.add(workTitle);
-                result.add(rs.getString(1));
+                result.add(new ResultItem(rs.getString(1), workTitle));
             }
 
 		} catch (SQLException e) {
@@ -89,7 +88,7 @@ public class Searcher {
     
 	}
 	
-	public void getStringShowOneWorkDetail(String ssn) {
+	public static Work getStringShowOneWorkDetail(Connection conn, String ssn) {
 		Work work = null;
         StringBuffer sql = new StringBuffer();
         sql.append("select * \n"
@@ -110,7 +109,7 @@ public class Searcher {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-        
+        return work;
 	}
 	
 }

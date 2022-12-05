@@ -35,25 +35,33 @@ public class Work {
 		}
     }
 
-//    public void show(){
-//        StringBuffer result = new StringBuffer();
-//        result.append("\n*----------------------------------------");
-//        result.append("\n|   "+this.work_title);
-//        result.append("\n*------------------------------------------");
-//        result.append("\n| 매체 : "+this.media);
-//        result.append("\n| 미성년자 감상 제한 여부 : "+this.is_adult);
-//        result.append("\n| 작품 소개 \n"+this.introduction);
-//        result.append("\n| 언어 : "+this.language);
-//        if(num_of_episode != 1){
-//            result.append("\n| 에피소드 수 : " + this.num_of_episode);
-//        }
-//        result.append("\n| 현재 상태 : "+this.status);
-//        if(this.origin_ssn != null){
-//            result.append("\n| 해당 작품은 " + this.origin_title+ "의 "+this.connected_type+"입니다.");
-//        }
-//        result.append("\n*-----------------------------------------");
-//        System.out.println(result.toString());
-//
-//    }
+    public String show(){
+        StringBuffer result = new StringBuffer();
+        result.append("<table border=1>");
+        result.append("<tr><th colspan='2'>"+this.work_title+"</th></tr>");
+        result.append("<tr><td>매체</td>");
+        result.append("<td>"+this.media+"</td></tr>");
+        result.append("<tr><td>미성년자 감상 제한 여부</td>");
+        result.append("<td>"+this.is_adult+"</td></tr>");
+        result.append("<tr><td colspan='2'>작품소개</td></tr>");
+        result.append("<tr><td colspan='2'>"+this.introduction+"</td></tr>");
+        result.append("<tr><td>언어</td>");
+        result.append("<td>"+this.language+"</td></tr>");
+
+        if(num_of_episode != 1){
+        	result.append("<tr><td>에피소드 수 </td>");
+            result.append("<td>"+this.num_of_episode+"</td></tr>");
+        }
+        result.append("<tr><td>현재 상태 </td>");
+        result.append("<td>"+this.status+"</td></tr>");
+        if(this.origin_ssn != null){
+        	result.append("<tr><td>추가 정보 </td>");
+            result.append("<td>해당 작품은 " + this.origin_title+ "의 "+this.connected_type+"입니다.</td></tr>");
+        }
+        result.append("</table>");
+        result.append("<p><button type=\"button\" class=\"navyBtn\" onClick=\"location.href='search.jsp'\"> 돌아가기 </button></p>");
+        return result.toString();
+
+    }
 
 }

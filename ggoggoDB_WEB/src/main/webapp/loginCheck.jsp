@@ -16,7 +16,7 @@
 	session.setAttribute("user", user);
 	
 	if(user.getID() != null){
-		response.sendRedirect("settingIG.jsp");
+		response.sendRedirect("Menu.jsp");
 	}else{
 		request.getRequestDispatcher("login.jsp?loginErr=1").forward(request, response);
 	}
