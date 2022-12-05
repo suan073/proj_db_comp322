@@ -118,14 +118,35 @@ public class Log {
 		}
 		return comments;
 	}
+	
+	int getNextCommentid(Connection conn) {
+		int commentId = 0;
+		try {
+			String sql = "select pjcommentid from pjcomment where targetposting=? order by pjcommentid desc";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, logid);
+			ResultSet rs = ps.executeQuery();
+
+			if (rs.next()) {
+				commentId = rs.getInt(1) + 1;
+			} else {
+				System.out.println("오류!");
+			}
+
+			ps.close();
+		} catch (SQLException ex2) {
+			System.err.println("sql error = " + ex2.getMessage());
+			System.exit(1);
+		}
+		return commentId;
+	}
 
 	public void writeComment(Connection conn, String userId, String text) {
 		try {
 			java.sql.Date today = new java.sql.Date(System.currentTimeMillis());
 			String sql = "insert into pjcomment values (?, ?, ?, ?, ?)";
 			PreparedStatement ps = conn.prepareStatement(sql);
-			System.out.println(commentNum);
-			ps.setInt(1, commentNum++);
+			ps.setInt(1, getNextCommentid(conn));
 			ps.setString(2, text);
 			ps.setDate(3, today);
 			ps.setString(4, userId);
