@@ -20,6 +20,13 @@ session.setAttribute("mypage", mypage);
 </head>
 <body>
 	<%
+	String like= request.getParameter("like");
+	if(like != null){
+		Log e = new Log(jdbc.getConn(), Integer.parseInt(like));
+		e.pushLike(jdbc.getConn());
+		like = null;
+	}
+	
 	out.print("<h3><button type=\"button\" onclick=\"location='Menu.jsp'\">메인 메뉴로 돌아가기</button></h3>");
 	out.print("<h2>마이페이지 ( USER : "+ userId +" )</h2>");
 	out.print("<h3> <button type=\"button\" onclick=\"location='changePw.jsp'\">비밀번호변경</button>");

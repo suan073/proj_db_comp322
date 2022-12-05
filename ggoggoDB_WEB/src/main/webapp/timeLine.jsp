@@ -20,6 +20,12 @@ session.setAttribute("timeLine", timeLine);
 </head>
 <body>
 <%
+	String like= request.getParameter("like");
+	if(like != null){
+		Log e = new Log(jdbc.getConn(), Integer.parseInt(like));
+		e.pushLike(jdbc.getConn());
+		like = null;
+	}
 	List<Log> logs;
 	String x= request.getParameter("searchLog");
 	out.print("<h3><button type=\"button\" onclick=\"location='Menu.jsp'\">메인 메뉴로 돌아가기</button></h3>");
