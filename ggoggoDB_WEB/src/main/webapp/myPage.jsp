@@ -22,7 +22,7 @@ session.setAttribute("mypage", mypage);
 <body>
 <h2>마이페이지</h2>
 	<%
-	out.print("<h3>" + userId + "<button type=\"button\">follow</button><button type=\"button\" onclick=\"location='openBoard.jsp'\">게시판 돌아가기</button></h3>");
+	out.print("<h3>" + userId + "<button type=\"button\">비밀번호변경</button><button type=\"button\" onclick=\"location='showFollow.jsp'\">팔로잉목록</button></h3>");
 	List<Log> logs = mypage.showUserLog();
 	for(Log e : logs){	
 		out.print(e.getTitle() + "\t" + e.getDate() + "<br>");

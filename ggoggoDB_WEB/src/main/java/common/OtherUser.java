@@ -11,7 +11,6 @@ public class OtherUser {
 		this.oUserId = userid;
 	}
 
-	// new method in Ph4
 	public List<Log> showUserLog(Connection conn) {
 		List<Log> logs = new ArrayList<Log>();
 		try {
@@ -33,7 +32,7 @@ public class OtherUser {
 		return logs;
 	}
 
-	boolean unfollow(Connection conn, String myId) {
+	public boolean unfollow(Connection conn, String myId) {
 		try {
 			String sql = "delete from follow where pjuserid=? and followerid=?";
 			PreparedStatement ps = conn.prepareStatement(sql);
@@ -59,7 +58,7 @@ public class OtherUser {
 		return true;
 	}
 
-	boolean follow(Connection conn, String myId) {
+	public boolean follow(Connection conn, String myId) {
 		try {
 			String sql = "insert into follow values (?, ?)";
 			PreparedStatement ps = conn.prepareStatement(sql);

@@ -32,8 +32,6 @@ public class MyPage {
 			} else if (choice.equals("2")) {
 				while (true) {
 
-					printFollowing();
-
 					System.out.println("게시물을 보고싶은 사용자의 ID를 입력하세요");
 					System.out.print("뒤로 가려면 'n'을 입력하세요: ");
 					String targetId = scanner.nextLine();
@@ -69,6 +67,7 @@ public class MyPage {
 		}
 	}
 	
+	// new method in Ph4
 	public List<Log> showUserLog(){
 		List<Log> logs = new ArrayList<Log>();
 		try {
@@ -99,11 +98,12 @@ public class MyPage {
 				return true;
 		return false;
 	}
-
-	List<String> getFollowing() {
+	
+	// new method in Ph4
+	public List<String> getFollowing() {
 		List<String> following = new ArrayList<String>();
 		try {
-			String sql = "select pjuserid\r\n" + "from follow\r\n" + "where followerid=?";
+			String sql = "select pjuserid from follow where followerid=?";
 
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, userid);
@@ -121,15 +121,15 @@ public class MyPage {
 		return following;
 	}
 
-	void printFollowing() {
-		List<String> following = getFollowing();
-		System.out.println();
-		System.out.println("* 팔로잉 목록 *");
-		System.out.println("--------------------");
-		for (String fuser : following)
-			System.out.println(fuser);
-		System.out.println();
-	}
+//	void printFollowing() {
+//		List<String> following = getFollowing();
+//		System.out.println();
+//		System.out.println("* 팔로잉 목록 *");
+//		System.out.println("--------------------");
+//		for (String fuser : following)
+//			System.out.println(fuser);
+//		System.out.println();
+//	}
 
 	void updatePassword(Scanner scan) {
 		try {
