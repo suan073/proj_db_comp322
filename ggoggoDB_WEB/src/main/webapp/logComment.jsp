@@ -45,6 +45,9 @@
 	case 2:
 		out.print("<h3><button type=\"button\" onclick=\"location='timeLine.jsp'\">타임라인 돌아가기</button></h2>");
 		break;
+	case 3:
+		out.print("<button type=\"button\" onclick=\"location='showFollow.jsp'\">내 팔로잉 목록 돌아가기</button>");
+		break;
 	}
 	
 	out.print("<table border=1 width=\"1000\">");
@@ -72,6 +75,7 @@
 	
 	out.print("<br><form method=\"post\">");
 	out.print("댓글: <textarea name=\"text\" required value=\"\">댓글 작성하기..</textarea>"); 
+	out.print("<input type=\"hidden\" name=\"type\" value="+type+">");
 	out.print("<button type=\"submit\" name=\"writeComment\" value=\"" + logId + "\">작성</button>");
 	out.print("</form>");
 	

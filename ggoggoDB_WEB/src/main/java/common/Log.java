@@ -145,7 +145,7 @@ public class Log {
 			if (rs.next()) {
 				commentId = rs.getInt(1) + 1;
 			} else {
-				System.out.println("오류!");
+				commentId = 0;
 			}
 
 			ps.close();
@@ -166,6 +166,7 @@ public class Log {
 			ps.setDate(3, today);
 			ps.setString(4, userId);
 			ps.setInt(5, logid);
+			commentNum++;
 
 			int res = ps.executeUpdate();
 			if (res == 1) {
