@@ -22,15 +22,9 @@ session.setAttribute("mypage", mypage);
 <body>
 <h2>마이페이지</h2>
 	<%
-	out.print("<h3>" + userId + "<button type=\"button\">비밀번호변경</button><button type=\"button\" onclick=\"location='showFollow.jsp'\">팔로잉목록</button></h3>");
+	out.print("<h3>" + userId + "<button type=\"button\" onclick=\"location='changePw.jsp'\">비밀번호변경</button><button type=\"button\" onclick=\"location='showFollow.jsp'\">팔로잉목록</button></h3>");
 	List<Log> logs = mypage.showUserLog();
-// 	for(Log e : logs){	
-// 		out.print(e.getTitle() + "\t" + e.getDate() + "<br>");
-// 		out.print(e.getContents() + "<br>");
-// 		out.print("<form action=\"logComment.jsp\" method=\"post\">");
-// 		out.print("<button type=\"submit\" name=\"logId\" value=\"" + e.getLogid() + "\">댓글</button>" + e.getCommentNum() + "<button type=\"button\">♡</button>" + e.getLikes() + "<br>");
-// 		out.print("</form>--------------------------------------------------<br>");
-// 	}
+
 	out.print("<table border=1 width=\"1000\">");
 	for(Log e : logs){
 		out.print("<tr>");
