@@ -59,7 +59,7 @@ public class Work {
             result.append("<td>해당 작품은 " + this.origin_title+ "의 "+this.connected_type+"입니다.</td></tr>");
         }
         result.append("</table>");
-        result.append("<button type=\"button\" class=\"navyBtn\" onClick=\"location.href='search.jsp'\"> 돌아가기 ");
+        result.append("<p><button type=\"button\" class=\"navyBtn\" onClick=\"location.href='search.jsp'\"> 돌아가기 </button></p>");
         return result.toString();
 
     }

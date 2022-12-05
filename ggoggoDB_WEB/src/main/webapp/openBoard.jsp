@@ -1,14 +1,13 @@
 <%@ page import="common.JdbcConnect"%>
-<%@ page import="common.OpenBoard"%>
-<%@ page import="common.Log"%>
+<%@ page import="common.*"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%
-JdbcConnect jdbc = new JdbcConnect();
-session.setAttribute("jdbc", jdbc);
-String userId = "XoOoOong";
+JdbcConnect jdbc = (JdbcConnect)session.getAttribute("jdbc");
+User user = (User)session.getAttribute("user");
+String userId = user.getID();
 session.setAttribute("userId", userId);
 OpenBoard openboard = new OpenBoard(jdbc.getConn(), userId);
 session.setAttribute("openboard", openboard);
