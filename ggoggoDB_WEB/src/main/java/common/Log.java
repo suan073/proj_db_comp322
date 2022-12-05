@@ -81,6 +81,21 @@ public class Log {
 		}
 	}
 
+	public Log(ResultSet rs, Connection conn) {
+		try {
+			this.logid = rs.getInt(1);
+			this.title = rs.getString(2);
+			this.likes = rs.getInt(4);
+			this.contents = rs.getString(5);
+			this.date = rs.getDate(6);
+			this.writerid = rs.getString(7);
+			setCommentNum(conn);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	void setCommentNum(Connection conn) {
 		try {
 			String sql = "select * from pjcomment where targetposting=?";
