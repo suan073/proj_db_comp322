@@ -25,7 +25,7 @@ session.setAttribute("openboard", openboard);
 	List<Log> logs;
 	String x= request.getParameter("searchLog");
 	
-	out.print("<h2>게시판<button onclick=\"location='writeLog.jsp'\">write</button> </h2>");
+	out.print("<h2>게시판 <button onclick=\"location='writeLog.jsp'\">글쓰기</button> </h2>");
 	out.print("<form method=\"post\">");
 	out.print("<h3>검색어 입력</h3>"); 
 	out.print("<input type=\"text\" name=\"search\" required value=\"\">");
