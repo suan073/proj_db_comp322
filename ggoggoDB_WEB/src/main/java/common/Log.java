@@ -66,7 +66,7 @@ public class Log {
 		}
 	}
 
-	Log(ResultSet rs) {
+	public Log(ResultSet rs) {
 		try {
 			this.logid = rs.getInt(1);
 			this.title = rs.getString(2);
@@ -195,6 +195,7 @@ public class Log {
 		result.append("</td>");
 		result.append("</tr>");
 		result.append("</table>");
+
 
 		return result.toString();
 	}
