@@ -65,7 +65,7 @@ public class OpenBoard {
 	int getNextLogid() {
 		int logId = 0;
 		try {
-			String sql = "select pjlogid from pjlog order by pjlogdate desc";
+			String sql = "select pjlogid from pjlog order by pjlogid desc";
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();
 
