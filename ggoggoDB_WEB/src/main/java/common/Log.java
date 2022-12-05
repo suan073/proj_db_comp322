@@ -208,10 +208,12 @@ public class Log {
 		result.append("<form action=\"logComment.jsp\" method=\"post\">");
 		result.append("<input type=\"hidden\" name=\"type\" value="+type+">");
 		result.append("<button type=\"submit\" name=\"logId\" value=\"" + logid + "\">댓글</button> " + commentNum);
+		result.append("</form>");
 
 		result.append("</td>");
 		result.append("<td  width=\"50%\" align=\"right\">");
-
+		
+		result.append("<form method=\"post\">");
 		result.append("<button type=\"button\">♡</button> " + likes);
 		result.append("</form>");
 
