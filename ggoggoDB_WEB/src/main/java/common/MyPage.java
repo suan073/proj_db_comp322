@@ -36,14 +36,6 @@ public class MyPage {
 		return logs;
 	}
 
-//	boolean infollowing(String oUserId) {
-//		List<String> following = getFollowing();
-//		for (String f : following)
-//			if (oUserId.equals(f))
-//				return true;
-//		return false;
-//	}
-
 	public List<String> getFollowing() {
 		List<String> following = new ArrayList<String>();
 		try {

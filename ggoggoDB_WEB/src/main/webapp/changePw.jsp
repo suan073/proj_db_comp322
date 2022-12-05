@@ -9,7 +9,7 @@
 <title>change password</title>
 </head>
 <body>
-	<h2>비밀번호 변경</h2>
+	<h2>비밀번호 변경<button type="button" onclick="location='myPage.jsp'">마이페이지 돌아가기</button></h2>
 	<%
 	MyPage mypage = (MyPage) session.getAttribute("mypage");
 	
