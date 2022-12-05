@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OtherUser {
-	String oUserId;
+	private String oUserId;
 
 	public OtherUser(String userid) {
 		this.oUserId = userid;

@@ -2,9 +2,7 @@ package common;
 
 import java.sql.*; // import JDBC package
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Scanner;
 
 public class OpenBoard {
 	int logNum;
