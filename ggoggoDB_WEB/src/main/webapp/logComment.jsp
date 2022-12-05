@@ -19,7 +19,13 @@
 	int logId;
 	Log e;
 	
-	if(slogId != null){
+	String like= request.getParameter("like");
+	if(like != null){
+		logId = Integer.parseInt(like);
+		e = new Log(jdbc.getConn(), logId);
+		e.pushLike(jdbc.getConn());
+		like = null;
+	} else if(slogId != null){
 		logId = Integer.parseInt(slogId);
 		String userId = (String)session.getAttribute("userId");
 		e = new Log(jdbc.getConn(), logId);

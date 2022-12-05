@@ -236,6 +236,7 @@ public class Log {
 		result.append("<td  width=\"50%\" align=\"right\">");
 		
 		result.append("<form method=\"post\">");
+		result.append("<input type=\"hidden\" name=\"type\" value="+type+">");
 		result.append("<button type=\"submit\" name=\"like\" value=\"" + logid + "\">♡</button> " + likes);
 		result.append("</form>");
 
