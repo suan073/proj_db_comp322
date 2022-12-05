@@ -2,10 +2,12 @@ package Search;
 
 public class ResultItem {
 	String ssn;
+	String title;
 	String content;
-	public ResultItem(String ssn, String content) {
+	public ResultItem(String ssn, String title, String content) {
 		super();
 		this.ssn = ssn;
+		this.title = title;
 		this.content = content;
 	}
 	public String getSsn() {
@@ -14,4 +16,8 @@ public class ResultItem {
 	public String getContent() {
 		return content;
 	}
+	public String getTitle() {
+		return title;
+	}
+	
 }

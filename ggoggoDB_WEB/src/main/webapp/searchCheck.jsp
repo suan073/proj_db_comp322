@@ -53,7 +53,14 @@
 	ArrayList<ResultItem> result = searcher.getSearchResult(category, search_word);
 	
 	session.setAttribute("searchResult", result);
-	request.getRequestDispatcher("search.jsp?SearchFlag=1").forward(request, response);
+	
+	String writingFlag = request.getParameter("writingFlag");
+	if(writingFlag != null){
+		request.getRequestDispatcher("search.jsp?SearchFlag=1&&writingFlag=1").forward(request, response);
+
+	}else{
+		request.getRequestDispatcher("search.jsp?SearchFlag=1").forward(request, response);
+	}
 	
 %>
 </body>

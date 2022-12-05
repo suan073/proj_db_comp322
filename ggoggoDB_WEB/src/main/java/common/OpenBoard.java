@@ -79,7 +79,7 @@ public class OpenBoard {
 	}
 
 	// New method in Ph4
-	public void writeLog(String title, String content, String ispublic) {
+	public void writeLog(String title, String content, String ispublic, String ssn) {
 		try {
 			java.sql.Date today = new java.sql.Date(System.currentTimeMillis());
 			String sql = "insert into pjlog values (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -92,7 +92,7 @@ public class OpenBoard {
 			ps.setString(5, content);
 			ps.setDate(6, today);
 			ps.setString(7, userId);
-			ps.setString(8, null);
+			ps.setString(8, ssn);
 			
 			int res = ps.executeUpdate();
 			if (res == 1) {
