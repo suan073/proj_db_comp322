@@ -31,7 +31,7 @@
 	
 	iGenre.updateAll();
 	
-	response.sendRedirect("search.jsp");
+	response.sendRedirect("myPage.jsp");
 	
 %>
 </body>

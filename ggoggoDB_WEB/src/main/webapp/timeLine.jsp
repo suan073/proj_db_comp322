@@ -22,7 +22,7 @@ session.setAttribute("timeLine", timeLine);
 <%
 	List<Log> logs;
 	String x= request.getParameter("searchLog");
-	
+	out.print("<h3><button type=\"button\" onclick=\"location='Menu.jsp'\">메인 메뉴로 돌아가기</button></h3>");
 	out.print("<h2> 타임라인 </h2>");
 	out.print("<p> 당신이 좋아하는 장르에 관련된 글이나 당신이 팔로우 하는 사람의 글을 시간 순서대로 보여줍니다. </p>");
 	logs = timeLine.allBoard();
