@@ -30,10 +30,10 @@
 	
 	List<String> follows = mypage.getFollowing();
 	for(String f : follows){
-		out.print("<form action=\"otherUserLog.jsp\" method=\"post\">");
+		out.print("<form action=\"otherUserLog.jsp\" method=\"post\" style=\"float:left;margin:0;\">");
 		out.print(f+"<button type=\"submit\" name=\"oUserId\" value=\""+f+"\">게시물보기</button></form>");
 		out.print("<form method=\"post\">");
-		out.print("<button type=\"submit\" name=\"unfollow\" value=\""+f+"\">언팔로우</button></form><br>");
+		out.print("<button type=\"submit\" name=\"unfollow\" value=\""+f+"\">언팔로우</button></form>");
 		out.print("--------------------------------------------------<br>");
 	}
 	%>

@@ -33,7 +33,7 @@
 	}
 	
 	out.print("<h2>" + oUserId);
-	out.print("<form method=\"post\">");
+	out.print("<form method=\"post\" style=\"float:left;margin:0;\">");
 	if(oUserId.equals(userId)){
 		
 	}else if(oUser.infollowing(jdbc.getConn(), userId)){
