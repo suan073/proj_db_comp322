@@ -56,7 +56,6 @@ public class OpenBoard {
 	public List<Log> searchLog(String search) {
 		List<Log> logs = new ArrayList<Log>();
 		try {
-			int logNum = 0;
 			String sql = "select * from pjlog left outer join (select targetposting, count (*) as commentnum\r\n"
 					+ "from pjcomment group by targetposting) on pjlogid=targetposting\r\n"
 					+ "where pjpublic='Y' and (pjlogtitle like ? or pjcontents like ? or writerid like ?) order by pjlogdate desc";
@@ -66,7 +65,7 @@ public class OpenBoard {
 			ps.setString(3, "%" + search + "%");
 			ResultSet rs = ps.executeQuery();
 			
-			while (rs.next() && logNum < 30) {
+			while (rs.next()) {
 				Log log = new Log(rs);
 				logs.add(log);
 			}
