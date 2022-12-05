@@ -25,9 +25,10 @@ session.setAttribute("openboard", openboard);
 	
 	out.print("<h2>게시판<button onclick=\"location='writeLog.jsp'\">write</button> </h2>");
 	out.print("<form method=\"post\">");
-	out.print("<h3>검색어: <input type=\"text\" name=\"search\" required value=\"\">");
+	out.print("<h3>검색어 입력<h3>"); 
+	out.print("<input type=\"text\" name=\"search\" required value=\"\">");
 	out.print("<button type=\"submit\" name=\"searchLog\" value=\"doSearch\">검색</button>");
-	out.print("<h3></form>");
+	out.print("</form>");
 	
 	if(x != null && x.equals("doSearch")){
 		logs = openboard.searchLog(request.getParameter("search"));
@@ -36,16 +37,17 @@ session.setAttribute("openboard", openboard);
 		logs = openboard.allBoard();
 	}
 	
+	out.print("<table border=1>");
 	for(Log e : logs){
-		out.print("<form action=\"otherUserLog.jsp\" method=\"post\">");
-		out.print("<button type=\"submit\" name=\"oUserId\" value=\"" + e.getWriterid() + "\">" + e.getWriterid() + "</button><br>");
-		out.print("</form>");		
-		out.print(e.getTitle() + "\t" + e.getDate() + "<br>");
-		out.print(e.getContents() + "<br>");
-		out.print("<form action=\"logComment.jsp\" method=\"post\">");
-		out.print("<button type=\"submit\" name=\"logId\" value=\"" + e.getLogid() + "\">댓글</button>" + e.getCommentNum() + "<button type=\"button\">♡</button>" + e.getLikes() + "<br>");
-		out.print("</form>--------------------------------------------------<br>");
+		out.print("<tr>");
+		out.print("<td>");
+		
+		out.print(e.show());
+		
+		out.print("</td>");
+		out.print("</tr>");
 	}
+	out.print("</table>");
 	%>
 </body>
 </html>
