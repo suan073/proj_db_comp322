@@ -5,13 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OtherUser {
-	String oUserId;
+	private String oUserId;
 
 	public OtherUser(String userid) {
 		this.oUserId = userid;
 	}
 
-	// new method in Ph4
 	public List<Log> showUserLog(Connection conn) {
 		List<Log> logs = new ArrayList<Log>();
 		try {
@@ -19,7 +18,7 @@ public class OtherUser {
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setString(1, oUserId);
 			ResultSet rs = ps.executeQuery();
-			
+
 			while (rs.next()) {
 				Log log = new Log(rs);
 				logs.add(log);
@@ -33,7 +32,33 @@ public class OtherUser {
 		return logs;
 	}
 
-	boolean unfollow(Connection conn, String myId) {
+	public boolean infollowing(Connection conn, String myId) {
+		boolean yn = false;
+		try {
+			String sql = "select * from follow where pjuserid=? and followerid=?";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, oUserId);
+			ps.setString(2, myId);
+			ResultSet rs = ps.executeQuery();
+
+			if (rs.next())
+				yn = true;
+
+			ps.close();
+			rs.close();
+			
+		} catch (SQLException ex2) {
+			System.err.println("sql error = " + ex2.getMessage());
+			System.exit(1);
+		}
+		return yn;
+	}
+
+	public boolean unfollow(Connection conn, String myId) {
+		if(!infollowing(conn, myId)) {
+			System.out.println("팔로우하고 있지 않습니다");
+			return false;
+		}
 		try {
 			String sql = "delete from follow where pjuserid=? and followerid=?";
 			PreparedStatement ps = conn.prepareStatement(sql);
@@ -59,7 +84,11 @@ public class OtherUser {
 		return true;
 	}
 
-	boolean follow(Connection conn, String myId) {
+	public boolean follow(Connection conn, String myId) {
+		if(infollowing(conn, myId)) {
+			System.out.println("이미 팔로우 중입니다");
+			return false;
+		}
 		try {
 			String sql = "insert into follow values (?, ?)";
 			PreparedStatement ps = conn.prepareStatement(sql);

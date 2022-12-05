@@ -40,14 +40,6 @@
 	out.print("</table>");
 	
 	List<Comment> comments = e.showComments(jdbc.getConn());
-	/* for(Comment c : comments){
-		out.print("<form action=\"otherUserLog.jsp\" method=\"post\">");
-		out.print("<button type=\"submit\" name=\"oUserId\" value=\"" + c.getWriterid() + "\">" + c.getWriterid() + "</button>");
-		out.print("</form>");
-		out.print(c.getDate() + "<br>");
-		out.print(c.getText() + "<br>");
-		out.print("--------------------------------------------------<br>");
-	} */
 	
 	out.print("<table border=1 width=\"1000\">");
 	for(Comment c : comments){

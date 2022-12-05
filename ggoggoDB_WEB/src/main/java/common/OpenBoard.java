@@ -2,9 +2,7 @@ package common;
 
 import java.sql.*; // import JDBC package
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Scanner;
 
 public class OpenBoard {
 	int logNum;
@@ -30,21 +28,21 @@ public class OpenBoard {
 		}
 	}
 
-	// new method in Ph4
 	public List<Log> allBoard() {
 		List<Log> logs = new ArrayList<Log>();
 		try {
 			int logNum = 0;
-			Statement stmt = conn.createStatement();
 			String sql = "select * from pjlog left outer join (select targetposting, count (*) as commentnum\r\n"
 					+ "from pjcomment group by targetposting) on pjlogid=targetposting\r\n"
-					+ "where pjpublic='Y' order by pjlogdate desc";
-			ResultSet rs = stmt.executeQuery(sql);
+					+ "where pjpublic='Y' or writerid=? order by pjlogdate desc";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, userId);
+			ResultSet rs = ps.executeQuery();
 			while (rs.next() && logNum < 30) {
 				Log log = new Log(rs);
 				logs.add(log);
 			}
-			stmt.close();
+			ps.close();
 			rs.close();
 		} catch (SQLException ex2) {
 			System.err.println("sql error = " + ex2.getMessage());
@@ -58,11 +56,12 @@ public class OpenBoard {
 		try {
 			String sql = "select * from pjlog left outer join (select targetposting, count (*) as commentnum\r\n"
 					+ "from pjcomment group by targetposting) on pjlogid=targetposting\r\n"
-					+ "where pjpublic='Y' and (pjlogtitle like ? or pjcontents like ? or writerid like ?) order by pjlogdate desc";
+					+ "where (pjpublic='Y' or writerid=?) and (pjlogtitle like ? or pjcontents like ? or writerid like ?) order by pjlogdate desc";
 			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setString(1, "%" + search + "%");
+			ps.setString(1, userId);
 			ps.setString(2, "%" + search + "%");
 			ps.setString(3, "%" + search + "%");
+			ps.setString(4, "%" + search + "%");
 			ResultSet rs = ps.executeQuery();
 			
 			while (rs.next()) {
