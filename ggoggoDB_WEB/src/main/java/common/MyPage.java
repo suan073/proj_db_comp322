@@ -13,59 +13,6 @@ public class MyPage {
 		this.userid = userid;
 		this.conn = conn;
 	}
-
-	void executeMyPage(Scanner scanner) {
-		while (true) {
-			String choice;
-
-			System.out.println();
-			System.out.println("*** 마이페이지 ***");
-			System.out.println("1. 비밀번호 변경");
-			System.out.println("2. 내 팔로우 목록");
-			System.out.println("0. 돌아가기");
-
-			choice = scanner.nextLine();
-
-			if (choice.equals("1")) {
-				updatePassword(scanner);
-
-			} else if (choice.equals("2")) {
-				while (true) {
-
-					System.out.println("게시물을 보고싶은 사용자의 ID를 입력하세요");
-					System.out.print("뒤로 가려면 'n'을 입력하세요: ");
-					String targetId = scanner.nextLine();
-
-					if (targetId.equals("n"))
-						break;
-
-					if (!infollowing(targetId))
-						System.out.println("잘못된 입력입니다.");
-					else {
-						OtherUser targetUser = new OtherUser(targetId);
-						targetUser.showUserLog(conn);
-
-						System.out.print("이 사용자를 언팔로우 할까요? (y/n): ");
-						choice = scanner.nextLine();
-
-						if (choice.equals("y")) {
-							targetUser.unfollow(conn, userid);
-						} else if (choice.equals("n")) {
-							System.out.println("목록으로 돌아갑니다.");
-						} else {
-							System.out.println("잘못된 입력입니다.");
-						}
-					}
-
-				}
-			} else if (choice.equals("0")) {
-				break;
-			} else {
-				System.out.println("잘못된 입력입니다.");
-				continue;
-			}
-		}
-	}
 	
 	// new method in Ph4
 	public List<Log> showUserLog(){
@@ -120,16 +67,6 @@ public class MyPage {
 		}
 		return following;
 	}
-
-//	void printFollowing() {
-//		List<String> following = getFollowing();
-//		System.out.println();
-//		System.out.println("* 팔로잉 목록 *");
-//		System.out.println("--------------------");
-//		for (String fuser : following)
-//			System.out.println(fuser);
-//		System.out.println();
-//	}
 
 	void updatePassword(Scanner scan) {
 		try {
