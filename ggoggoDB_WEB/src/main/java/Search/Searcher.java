@@ -67,18 +67,18 @@ public class Searcher {
             rs = pstmt.executeQuery();
 
             while(rs.next()){
-                String workTitle = rs.getString(2);
+                String rscontent = rs.getString(2);
                 switch(category){
                     case "TITLE":
                         break;
                     case "CREATOR":
-                        workTitle = rs.getString(4) + " - " + workTitle;
+                        rscontent = "(creator : " + rs.getString(4) + ") " + rscontent;
                         break;
                     case "KEYWORD":
-                        workTitle = rs.getString(4) + " - " + workTitle;
+                        rscontent = "(keyword : " + rs.getString(4) + ") " + rscontent;
                         break;
                 }
-                result.add(new ResultItem(rs.getString(1), workTitle));
+                result.add(new ResultItem(rs.getString(1), rs.getString(2), rscontent));
             }
 
 		} catch (SQLException e) {

@@ -10,16 +10,35 @@
 <title>search</title>
 </head>
 <body>
-<h4>필터</h4>
-<%
+<%	
 	String SearchFlag = request.getParameter("SearchFlag");
+	String writingFlag = request.getParameter("writingFlag");
+	String nextJsp = null;
+	String pageTitle = null;
+	String subText = null;
+	if(writingFlag != null){
+		nextJsp = "writeLog.jsp";
+		pageTitle = "작품 탐색 (게시글 작성용)";
+		subText = "선택하기";
+	}else{
+		nextJsp = "workShow.jsp";
+		pageTitle = "작품 탐색";
+		subText = "상세보기";
+
+	}
+	out.print("<h2>"+pageTitle+"</h2>");
 %>
+<h3>- 필터 -</h3>
 <form action="searchCheck.jsp" method="post">
 <%
 	
 	JdbcConnect jdbc = (JdbcConnect)session.getAttribute("jdbc");
 	User user = (User)session.getAttribute("user");
 	
+
+	if(writingFlag != null){
+		out.print("<input type=\"hidden\" name=\"writingFlag\" value="+writingFlag+">");
+	}
 	// 필
 	out.print("<h5>언어 : ");
 	ArrayList<String> langList = FilterForSearch.getFilterExample(jdbc.getConn(), "language"); 
@@ -45,7 +64,7 @@
 	}
 	out.print("</h5>");
 	
-	out.print("<h5>상영 상태 : ");
+	out.print("<h5>상태 : ");
 	ArrayList<String> statusList = FilterForSearch.getFilterExample(jdbc.getConn(), "status"); 
 	for(int i = 0 ; i <statusList.size(); i++){
 		String item = statusList.get(i);
@@ -53,13 +72,13 @@
 	}
 	out.print("</h5>");
 %>
-<h4> 검색할 범위 </h4>
-<label><input type="radio" name="sradio" value="TITLE"> 제목 </label>
+<h3>- 검색할 범위 -</h3>
+<label><input type="radio" name="sradio" value="TITLE" required> 제목 </label>
 <label><input type="radio" name="sradio" value="CREATOR"> 창작자 </label>
 <label><input type="radio" name="sradio" value="KEYWORD"> 키워드 </label>
 
-<h4> 검색어 입력 </h4>
-<input type="text" name="inputWord">
+<h3>- 검색어 입력 -</h3>
+<input type="text" name="inputWord" >
 <input type="submit" value="검색">
 </form>
 <%
@@ -72,9 +91,10 @@
 		for(int index = 0; index<result.size(); index++){
 			out.print("<tr>");
 			out.print("<td width=1000 height=50>"+index+". "+result.get(index).getContent()+"</td>");
-			out.print("<td><form action=\"workShow.jsp\" method=\"post\">");
+			out.print("<td><form action=\""+nextJsp+"\" method=\"post\">");
 			out.print("<input type=\"hidden\" name=\"ssn\" value="+result.get(index).getSsn()+">");
-			out.print("<input type=\"submit\" value=\"상세보기\"> </form></td>");
+			out.print("<input type=\"hidden\" name=\"sContent\" value=\""+result.get(index).getTitle()+"\">");
+			out.print("<input type=\"submit\" value=\""+subText+"\"> </form></td>");
 			out.print("</tr>");
 		}
 		out.print("</table>");

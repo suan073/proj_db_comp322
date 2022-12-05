@@ -11,7 +11,7 @@
 <body>
 	<%
 	OpenBoard openboard = (OpenBoard) session.getAttribute("openboard");
-	openboard.writeLog(request.getParameter("title"), request.getParameter("content"), request.getParameter("public"));
+	openboard.writeLog(request.getParameter("title"), request.getParameter("content"), request.getParameter("public"), request.getParameter("ssn"));
 	response.sendRedirect("openBoard.jsp");
 	%>
 </body>

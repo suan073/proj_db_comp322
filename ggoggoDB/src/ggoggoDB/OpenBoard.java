@@ -298,7 +298,7 @@ class OpenBoard {
 					ps.setString(8, null);
 					break;
 				} else if (input.equals("y")) {
-					part3_1_bySuin s = new part3_1_bySuin();
+					Searching s = new Searching();
 					String wssn = s.search2(conn, scanner);
 					ps.setString(8, wssn);
 //					String wssn = getSSN(conn, scanner);
