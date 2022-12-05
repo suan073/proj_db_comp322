@@ -5,27 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OpenBoard {
-	int logNum;
 	String userId;
 	Connection conn;
 
 	public OpenBoard(Connection conn, String userId) {
-		logNum = 0;
 		this.conn = conn;
 		this.userId = userId;
-		try {
-			Statement stmt = conn.createStatement();
-			String sql = "select * from pjlog";
-			ResultSet rs = stmt.executeQuery(sql);
-
-			while (rs.next())
-				logNum++;
-			stmt.close();
-			rs.close();
-		} catch (SQLException ex2) {
-			System.err.println("sql error = " + ex2.getMessage());
-			System.exit(1);
-		}
 	}
 
 	public List<Log> allBoard() {
@@ -76,15 +61,35 @@ public class OpenBoard {
 		}
 		return logs;
 	}
+	
+	int getNextLogid() {
+		int logId = 0;
+		try {
+			String sql = "select pjlogid from pjlog order by pjlogdate desc";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
 
-	// New method in Ph4
+			if (rs.next()) {
+				logId = rs.getInt(1) + 1;
+			} else {
+				System.out.println("오류!");
+			}
+
+			ps.close();
+		} catch (SQLException ex2) {
+			System.err.println("sql error = " + ex2.getMessage());
+			System.exit(1);
+		}
+		return logId;
+	}
+
 	public void writeLog(String title, String content, String ispublic, String ssn) {
 		try {
 			java.sql.Date today = new java.sql.Date(System.currentTimeMillis());
 			String sql = "insert into pjlog values (?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement ps = conn.prepareStatement(sql);
 
-			ps.setInt(1, logNum++);
+			ps.setInt(1, getNextLogid());
 			ps.setString(2, title);
 			ps.setString(3, ispublic);
 			ps.setInt(4, 0);
