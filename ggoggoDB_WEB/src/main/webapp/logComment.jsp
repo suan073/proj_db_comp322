@@ -29,24 +29,37 @@
 		e = new Log(jdbc.getConn(), logId);
 	}
 
-	out.print("<h4><form action=\"otherUserLog.jsp\" method=\"post\">");
-	out.print("<button type=\"submit\" name=\"oUserId\" value=\"" + e.getWriterid() + "\">" + e.getWriterid() + "</button><br>");
-	out.print("</form>");		
-	out.print(e.getTitle() + "\t" + e.getDate() + "<br>");
-	out.print(e.getContents() + "<br>");
-	out.print("<form action=\"logComment.jsp\" method=\"post\">");
-	out.print("<button type=\"submit\" name=\"logId\" value=\"" + e.getLogid() + "\">댓글</button>" + e.getCommentNum() + "<button type=\"button\">♡</button>" + e.getLikes() + "<br>");
-	out.print("</form>--------------------------------------------------</h4>");
+	out.print("<table border=1 width=\"1000\">");
+	out.print("<tr>");
+	out.print("<td>");
+	
+	out.print(e.show());
+	
+	out.print("</td>");
+	out.print("</tr>");
+	out.print("</table>");
 	
 	List<Comment> comments = e.showComments(jdbc.getConn());
-	for(Comment c : comments){
+	/* for(Comment c : comments){
 		out.print("<form action=\"otherUserLog.jsp\" method=\"post\">");
 		out.print("<button type=\"submit\" name=\"oUserId\" value=\"" + c.getWriterid() + "\">" + c.getWriterid() + "</button>");
 		out.print("</form>");
 		out.print(c.getDate() + "<br>");
 		out.print(c.getText() + "<br>");
 		out.print("--------------------------------------------------<br>");
+	} */
+	
+	out.print("<table border=1 width=\"1000\">");
+	for(Comment c : comments){
+		out.print("<tr>");
+		out.print("<td>");
+		
+		out.print(c.show());
+		
+		out.print("</td>");
+		out.print("</tr>");
 	}
+	out.print("</table>");
 	
 	out.print("<br><form method=\"post\">");
 	out.print("댓글: <textarea name=\"text\" required value=\"\">댓글 작성하기..</textarea>"); 
