@@ -56,7 +56,7 @@
 <h4> 검색할 범위 </h4>
 <label><input type="radio" name="sradio" value="TITLE"> 제목 </label>
 <label><input type="radio" name="sradio" value="CREATOR"> 창작자 </label>
-<label><input type="radio" name="sradio" value="KEWORD"> 키워드 </label>
+<label><input type="radio" name="sradio" value="KEYWORD"> 키워드 </label>
 
 <h4> 검색어 입력 </h4>
 <input type="text" name="inputWord">
