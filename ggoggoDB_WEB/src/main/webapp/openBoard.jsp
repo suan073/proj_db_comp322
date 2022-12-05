@@ -1,11 +1,17 @@
 <%@ page import="common.JdbcConnect"%>
 <%@ page import="common.OpenBoard"%>
 <%@ page import="common.Log"%>
+<%@ page import="java.util.List"%>
+<%@ page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%
 JdbcConnect jdbc = new JdbcConnect();
 session.setAttribute("jdbc", jdbc);
+String userId = "XoOoOong";
+session.setAttribute("userId", userId);
+OpenBoard openboard = new OpenBoard(jdbc.getConn(), userId);
+session.setAttribute("openboard", openboard);
 %>
 <!DOCTYPE html>
 <html>
@@ -14,21 +20,32 @@ session.setAttribute("jdbc", jdbc);
 <title>OpenBoard</title>
 </head>
 <body>
-	<h2>게시판</h2>
 	<%
-	//JdbcConnect jdbc = (JdbcConnect) session.getAttribute("jdbc");
-	OpenBoard openboard = new OpenBoard(jdbc.getConn());
-	Log[] logs = openboard.allBoard(jdbc.getConn());
-	for (int i = 0; i < logs.length; i++) {
-		//out.print("<a href=\"#\" onclick=\"location=\'otherUserLog.jsp\'\">"+logs[i].getWriterid()+"</a><br>");
-		//out.print("<button type=\"submit\" onclick=\"location=\'otherUserLog.jsp\'\" name=\"oUserId\" value=\"+logs[i].getWriterid()+\">"+logs[i].getWriterid()+"</button><br>");
+	List<Log> logs;
+	String x= request.getParameter("searchLog");
+	
+	out.print("<h2>게시판<button onclick=\"location='writeLog.jsp'\">write</button> </h2>");
+	out.print("<form method=\"post\">");
+	out.print("<h3>검색어: <input type=\"text\" name=\"search\" required value=\"\">");
+	out.print("<button type=\"submit\" name=\"searchLog\" value=\"doSearch\">검색</button>");
+	out.print("<h3></form>");
+	
+	if(x != null && x.equals("doSearch")){
+		logs = openboard.searchLog(request.getParameter("search"));
+		out.print("<h3>" + request.getParameter("search") + " 검색 결과 <button type=\"button\" onclick=\"location='openBoard.jsp'\">게시판 돌아가기</button></h3>");
+	} else{
+		logs = openboard.allBoard();
+	}
+	
+	for(Log e : logs){
 		out.print("<form action=\"otherUserLog.jsp\" method=\"post\">");
-		out.print("<button type=\"submit\" name=\"oUserId\" value=\"" + logs[i].getWriterid() + "\">" + logs[i].getWriterid() + "</button><br>");
+		out.print("<button type=\"submit\" name=\"oUserId\" value=\"" + e.getWriterid() + "\">" + e.getWriterid() + "</button><br>");
 		out.print("</form>");		
-		out.print(logs[i].getTitle() + "\t" + logs[i].getDate() + "<br>");
-		out.print(logs[i].getContents() + "<br>");
-		out.print("<button type=\"button\">댓글</button>" + "<button type=\"button\">♡</button>" + logs[i].getLikes() + "<br>");
-		out.print("--------------------------------------------------<br>");
+		out.print(e.getTitle() + "\t" + e.getDate() + "<br>");
+		out.print(e.getContents() + "<br>");
+		out.print("<form action=\"logComment.jsp\" method=\"post\">");
+		out.print("<button type=\"submit\" name=\"logId\" value=\"" + e.getLogid() + "\">댓글</button>" + e.getCommentNum() + "<button type=\"button\">♡</button>" + e.getLikes() + "<br>");
+		out.print("</form>--------------------------------------------------<br>");
 	}
 	%>
 </body>
