@@ -24,7 +24,7 @@
 		nextJsp = "workShow.jsp";
 		pageTitle = "작품 탐색";
 		subText = "상세보기";
-
+		out.print("<h3><button type=\"button\" onclick=\"location='Menu.jsp'\">메인 메뉴로 돌아가기</button></h3>");
 	}
 	out.print("<h2>"+pageTitle+"</h2>");
 %>

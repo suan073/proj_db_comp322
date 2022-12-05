@@ -20,6 +20,8 @@ session.setAttribute("openboard", openboard);
 </head>
 <body>
 	<%
+	out.print("<h3><button type=\"button\" onclick=\"location='Menu.jsp'\">메인 메뉴로 돌아가기</button></h3>");
+
 	List<Log> logs;
 	String x= request.getParameter("searchLog");
 	
