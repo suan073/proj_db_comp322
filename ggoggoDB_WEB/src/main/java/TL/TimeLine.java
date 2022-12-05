@@ -62,7 +62,7 @@ public class TimeLine {
 			ResultSet rs = pstmt.executeQuery();
 			
 			while (rs.next() && logNum < 30) {
-				Log log = new Log(rs);
+				Log log = new Log(rs,conn);
 				logs.add(log);
 				//System.out.print();
 			}

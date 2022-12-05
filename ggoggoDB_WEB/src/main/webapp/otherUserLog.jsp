@@ -50,6 +50,9 @@
 		case 2:
 			out.print("<button type=\"button\" onclick=\"location='timeLine.jsp'\">타임라인 돌아가기</button>");
 			break;
+		case 3:
+			out.print("<button type=\"button\" onclick=\"location='showFollow.jsp'\">내 팔로잉 목록 돌아가기</button>");
+			break;
 	}
 	out.print("<table>");
 	out.print("<tr><td>");
