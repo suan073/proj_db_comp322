@@ -166,7 +166,7 @@ public class Log {
 		}
 	}
 
-	public String show() {
+	public String show(int type) { // openboard :0, mypage :1, timeline :2,
 		StringBuffer result = new StringBuffer();
 		result.append("<table width=\"100%\">");
 
@@ -178,8 +178,9 @@ public class Log {
 
 		result.append("</td>");
 		result.append("<td align=\"right\">");
-
-		result.append(" <button type=\"submit\" name=\"oUserId\" value=\"" + writerid
+		
+		result.append("<input type=\"hidden\" name=\"type\" value="+type+">");
+		result.append("<button type=\"submit\" name=\"oUserId\" value=\"" + writerid
 				+ "\"> 해당 글쓴이의 모든 글 구경하러 가기! </button><br>");
 		result.append("</form>");
 
@@ -205,6 +206,7 @@ public class Log {
 		result.append("<td  width=\"50%\">");
 
 		result.append("<form action=\"logComment.jsp\" method=\"post\">");
+		result.append("<input type=\"hidden\" name=\"type\" value="+type+">");
 		result.append("<button type=\"submit\" name=\"logId\" value=\"" + logid + "\">댓글</button> " + commentNum);
 
 		result.append("</td>");

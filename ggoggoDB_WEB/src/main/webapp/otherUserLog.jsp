@@ -41,15 +41,25 @@
 		out.print("<button type=\"submit\" name=\"follow\" value=\""+oUserId+"\">팔로우</button></form>");
 	}
 	
-	out.print("<button type=\"button\" onclick=\"location='openBoard.jsp'\">게시판 돌아가기</button></h2>");
+	int type = Integer.parseInt(request.getParameter("type"));
+	switch(type){
+		case 0:
+			out.print("<button type=\"button\" onclick=\"location='openBoard.jsp'\">게시판 돌아가기</button></h2>");
+			break;
+		case 1:
+			out.print("<button type=\"button\" onclick=\"location='myPage.jsp'\">마이페이지 돌아가기</button></h2>");
+			break;
+		case 2:
+			out.print("<button type=\"button\" onclick=\"location='timeLine.jsp'\">타임라인 돌아가기</button></h2>");
+			break;
+	}
 	List<Log> logs = oUser.showUserLog(jdbc.getConn());
 
 	out.print("<table border=1 width=\"1000\">");
 	for(Log e : logs){
 		out.print("<tr>");
 		out.print("<td>");
-		
-		out.print(e.show());
+		out.print(e.show(type));
 		
 		out.print("</td>");
 		out.print("</tr>");
