@@ -1,12 +1,43 @@
+<%@ page import="common.*"%>
+<%@ page import="TL.*"%>
+<%@ page import="java.util.List"%>
+<%@ page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%
+JdbcConnect jdbc = (JdbcConnect)session.getAttribute("jdbc");
+User user = (User)session.getAttribute("user");
+String userId = user.getID();
+session.setAttribute("userId", userId);
+TimeLine timeLine = new TimeLine(jdbc.getConn(), userId);
+session.setAttribute("timeLine", timeLine);
+%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Time Line</title>
 </head>
 <body>
-<h1>타임라인~~~~~~~~~~~~~~~~~~~~~~</h1>
+<%
+	List<Log> logs;
+	String x= request.getParameter("searchLog");
+	
+	out.print("<h2> 타임라인 </h2>");
+	out.print("<p> 당신이 좋아하는 장르에 관련된 글이나 당신이 팔로우 하는 사람의 글을 시간 순서대로 보여줍니다. </p>");
+	logs = timeLine.allBoard();
+	
+	out.print("<table border=1>");
+	for(Log e : logs){
+		out.print("<tr>");
+		out.print("<td>");
+		
+		out.print(e.show());
+		
+		out.print("</td>");
+		out.print("</tr>");
+	}
+	out.print("</table>");
+%>
 </body>
 </html>
