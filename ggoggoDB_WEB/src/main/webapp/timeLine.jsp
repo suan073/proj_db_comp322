@@ -32,7 +32,7 @@ session.setAttribute("timeLine", timeLine);
 		out.print("<tr>");
 		out.print("<td>");
 		
-		out.print(e.show());
+		out.print(e.show(2));
 		
 		out.print("</td>");
 		out.print("</tr>");

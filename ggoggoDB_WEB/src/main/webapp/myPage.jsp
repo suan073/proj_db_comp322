@@ -32,7 +32,7 @@ session.setAttribute("mypage", mypage);
 		out.print("<tr>");
 		out.print("<td>");
 		
-		out.print(e.show());
+		out.print(e.show(1));
 		
 		out.print("</td>");
 		out.print("</tr>");

@@ -1,3 +1,4 @@
+<%@page import="java.io.ObjectOutput"%>
 <%@ page import="common.JdbcConnect"%>
 <%@ page import="common.Comment"%>
 <%@ page import="common.Log"%>
@@ -12,7 +13,6 @@
 <title>show log and comment</title>
 </head>
 <body>
-	<h3><button type="button" onclick="location='openBoard.jsp'">게시판 돌아가기</button></h3>
 	<%
 	JdbcConnect jdbc = (JdbcConnect) session.getAttribute("jdbc");
 	String slogId = request.getParameter("writeComment");
@@ -28,12 +28,23 @@
 		logId = Integer.parseInt(request.getParameter("logId"));
 		e = new Log(jdbc.getConn(), logId);
 	}
-
+	int type = Integer.parseInt(request.getParameter("type"));
+	switch(type){
+	case 0:
+		out.print("<h3><button type=\"button\" onclick=\"location='openBoard.jsp'\">게시판 돌아가기</button></h2>");
+		break;
+	case 1:
+		out.print("<h3><button type=\"button\" onclick=\"location='myPage.jsp'\">마이페이지 돌아가기</button></h2>");
+		break;
+	case 2:
+		out.print("<h3><button type=\"button\" onclick=\"location='timeLine.jsp'\">타임라인 돌아가기</button></h2>");
+		break;
+	}
+	
 	out.print("<table border=1 width=\"1000\">");
 	out.print("<tr>");
 	out.print("<td>");
-	
-	out.print(e.show());
+	out.print(e.show(type));
 	
 	out.print("</td>");
 	out.print("</tr>");

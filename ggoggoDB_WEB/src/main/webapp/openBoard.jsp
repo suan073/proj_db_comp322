@@ -44,7 +44,7 @@ session.setAttribute("openboard", openboard);
 		out.print("<tr>");
 		out.print("<td>");
 		
-		out.print(e.show());
+		out.print(e.show(0));
 		
 		out.print("</td>");
 		out.print("</tr>");
