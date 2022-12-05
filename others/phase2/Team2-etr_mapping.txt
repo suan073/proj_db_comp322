@@ -1,0 +1,73 @@
+GENRE가 가질 수 있는 record의 수가 50개를 넘지 못하기 때문에 writing_info, video_info, webtoon_info 등 기존의 work를 부가 설명할 수 있는 엔티티를 더 생성하였다.
+추가로 자잘한 부분에 대한 수정이 들어갔는데, 수정 이후의 ER에 대한 재설명을 Team2-ggoggoDB_ERD_README.txt에 해두었다. 
+
+
+WORK
+WORK 엔티티를 매핑한 relation으로 PK는 SSN이다.
+WorkTitle, Media, IsAdult, Introduction, Language, NumOfEpisode, Status는 WEBTOON_INFO 엔티티에서 온 속성들이다. 
+OriginSSN은 FK로 WORK의 SSN을 참조하는데, BE_CONNECTED relationship을 매핑한 것이다.
+또한 SeriesNo, ConnectType은 BE_CONNECTED relationship에서 온 속성들이다.
+
+CREATOR
+CREATOR 엔티티를 매핑한 relation으로, PK는 CreatorID이다.
+CreatorID, CrName, CrGender, Job은 CREATOR 엔티티에서 온 속성들이다.
+
+MADE
+WORK와 CREATOR가 참여하는 M:N관계인 MADE를 매핑한 relation으로, PK는 Wssn과 CreatorID이다.
+Wssn은 WORK의 PK인 SSN을 참조한 것이고, CreatorID는 CREATOR의 CreatorID를 참조한 것이다.
+
+SITES
+WORK의 multi-value attribute인 Sites를 매핑한 relation으로, PK는 Wssn과 Sitelink이다.
+Wssn은 WORK의 PK인 SSN을 참조한 것이고, Sitelink는 속성값을 담는다.
+
+KEYWORD
+WORK의 multi-value attribute인 Keyword를 매핑한 relation으로, PK는 Wssn과 Keyword이다.
+Wssn은 WORK의 PK인 SSN을 참조한 것이고, Keyword는 속성값을 담는다.
+
+WRITING_INFO
+WRITING_INFO 엔티티를 매핑한 relation으로, PK는 Wssn과 WritSSN이다.
+Wssn은 WORK의 PK인 SSN을 참조한 것이고, WritSSN은 partial key이다.
+NumOfPages, Publisher는 WRITING_INFO 엔티티에서 온 속성들이다.
+  
+WEBTOON_INFO
+WEBTOON_INFO 엔티티를 매핑한 relation으로, PK는 Wssn과 ToonSSN이다.
+Wssn은 WORK의 PK인 SSN을 참조한 것이고, ToonSSN은 partial key이다.
+IsColored, ToonIsFree는 WEBTOON_INFO 엔티티에서 온 속성들이다.
+
+VIDEO_INFO
+VIDEO_INFO 엔티티를 매핑한 relation으로, PK는 Wssn과 VideoSSN이다.
+Wssn은 WORK의 PK인 SSN을 참조한 것이고, VideoSSN은 partial key이다.
+ProductionYear, Country는 VIDEO_INFO 엔티티에서 온 속성들이다.
+
+PJUSER
+USER 엔티티를 매핑한 relation으로, PK는 pjUserID이다.
+Password, pjUserGender, Birth_date는 엔티티의 속성들이다.
+
+GENRE
+GENRE 엔티티를 매핑한 relation으로, PK는 GenreID이다.
+GenreName은 GENRE 엔티티에서 온 속성이다.
+
+PJLOG
+LOG 엔티티와 POST, POST_FOR relationship을 매핑한 relation으로, PK는 pjLogID이다. 
+pjLogTitle, Public, Likes, Contents, pjLogDate는 LOG 엔티티의 속성들이다. 
+첫번째 FK인 WriterID는 POST relationship을 매핑한 것이며, PJUSER의 pjUSERID를 참조한다.
+두번째 FK인 WriteAbout는 POST_FOR relationship을 매핑한 것이며, WORK의 SSN을 참조한다.
+
+PJCOMMENT
+COMMENT 엔티티와 WRITE, WRITE_FOR relationship을 매핑한 relation으로, PK는 pjCommentID이다. 
+Text, pjCommentDate는 COMMENT 엔티티의 속성들이다. 
+첫번째 FK인 WriterID는 WRITE relationship을 매핑한 것이며, PJUSER의 pjUSERID를 참조한다.
+두번째 FK인 targetPosting는 POST_FOR relationship을 매핑한 것이며, PJLOG의 pjLogID을 참조한다.
+
+FOLLOW
+USER가 참여하는 M:N관계인 FOLLOW를 매핑한 relation으로, PK는 FollowerID와 pjUserID이다.
+FollowerID와 pjUserID는 USER의 PK인 pjUserID를 참조한 것이다.
+FollowerID는 팔로워의 아이디, pjUserID는 팔로우받는 유저의 아이디를 나타낸다.
+
+INTERESTED
+USER와 GENRE가 참여하는 M:N관계인 INTERESTED를 매핑한 relation으로, PK는 pjUserID와 GenreID이다.
+pjUserID는 USER의 PK인 pjUserID를 참조한 것이고, GenreID는 GENRE의 GenreID를 참조한 것이다.
+
+HAVE
+WORK와 GENRE가 참여하는 M:N관계인 HAVE를 매핑한 relation으로, PK는 Wssn과 GenreID이다.
+Wssn은 WORK의 PK인 SSN을 참조한 것이고, GenreID는 GENRE의 GenreID를 참조한 것이다.
