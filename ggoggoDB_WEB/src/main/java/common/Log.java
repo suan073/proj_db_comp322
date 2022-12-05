@@ -165,6 +165,28 @@ public class Log {
 			System.exit(1);
 		}
 	}
+	
+	public void pushLike(Connection conn) {
+		try {
+			String sql = "update pjlog set likes=? where pjlogid=?";
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setInt(1, getLikes() + 1);
+			likes++;
+			ps.setInt(2, logid);
+
+			int res = ps.executeUpdate();
+			if (res == 1) {
+				System.out.println("좋아요!");
+				conn.commit();
+			} else {
+				System.out.println("오류!");
+			}
+			ps.close();
+		} catch (SQLException ex2) {
+			System.err.println("sql error = " + ex2.getMessage());
+			System.exit(1);
+		}
+	}
 
 	public String show(int type) { // openboard :0, mypage :1, timeline :2,
 		StringBuffer result = new StringBuffer();
@@ -204,7 +226,7 @@ public class Log {
 
 		result.append("<tr>");
 		result.append("<td  width=\"50%\">");
-
+		
 		result.append("<form action=\"logComment.jsp\" method=\"post\">");
 		result.append("<input type=\"hidden\" name=\"type\" value="+type+">");
 		result.append("<button type=\"submit\" name=\"logId\" value=\"" + logid + "\">댓글</button> " + commentNum);
@@ -214,7 +236,7 @@ public class Log {
 		result.append("<td  width=\"50%\" align=\"right\">");
 		
 		result.append("<form method=\"post\">");
-		result.append("<button type=\"button\">♡</button> " + likes);
+		result.append("<button type=\"submit\" name=\"like\" value=\"" + logid + "\">♡</button> " + likes);
 		result.append("</form>");
 
 		result.append("</td>");

@@ -32,6 +32,13 @@ session.setAttribute("openboard", openboard);
 	out.print("<button type=\"submit\" name=\"searchLog\" value=\"doSearch\">검색</button>");
 	out.print("</form>");
 	
+	String like= request.getParameter("like");
+	if(like != null){
+		Log e = new Log(jdbc.getConn(), Integer.parseInt(like));
+		e.pushLike(jdbc.getConn());
+		like = null;
+	}
+	
 	if(x != null && x.equals("doSearch")){
 		logs = openboard.searchLog(request.getParameter("search"));
 		out.print("<h3>" + request.getParameter("search") + " 검색 결과 <button type=\"button\" onclick=\"location='openBoard.jsp'\">게시판 돌아가기</button></h3>");

@@ -18,6 +18,14 @@
 	String oUserId = request.getParameter("oUserId");
 	OtherUser oUser;
 	
+	String like= request.getParameter("like");
+	if(like != null){
+		Log e = new Log(jdbc.getConn(), Integer.parseInt(like));
+		e.pushLike(jdbc.getConn());
+		like = null;
+		oUserId = e.getWriterid();
+	}
+	
 	if(oUserId != null){
 		oUser = new OtherUser(oUserId);
 	}else if(request.getParameter("unfollow") != null){
