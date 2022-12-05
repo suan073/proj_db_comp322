@@ -1,3 +1,4 @@
+<%@page import="org.apache.jasper.tagplugins.jstl.core.Out"%>
 <%@ page import="common.*"%>
 <%@ page import="common.Log"%>
 <%@ page import="java.util.List"%>
@@ -49,11 +50,13 @@
 		out.print("</tr>");
 	}else if(oUser.infollowing(jdbc.getConn(), userId)){
 		out.print("<td>");
-		out.print("<form method=\"post\"><button type=\"submit\" name=\"unfollow\" value=\""+oUserId+"\">언팔로우</button></form>");
+		out.print("<form method=\"post\"> <input type=\"hidden\" name=\"type\" value="+type+"> ");
+		out.print("<button type=\"submit\" name=\"unfollow\" value=\""+oUserId+"\">언팔로우</button></form>");
 		out.print("</td></tr>");
 	}else{
 		out.print("<td>");
-		out.print("<form method=\"post\"> <button type=\"submit\" name=\"follow\" value=\""+oUserId+"\">팔로우</button> </form>");
+		out.print("<form method=\"post\">  <input type=\"hidden\" name=\"type\" value="+type+"> ");
+		out.print("<button type=\"submit\" name=\"follow\" value=\""+oUserId+"\">팔로우</button> </form>");
 		out.print("</td></tr>");
 	}
 	out.print("</table>");
